@@ -1,0 +1,4 @@
+name: 'Persistent Identifiers'
+description: "Provides a generalized framework for third-party modules to mint and persit DOIs, ARKs, etc. for Drupal Entities."
+type: module
+core: 8.x

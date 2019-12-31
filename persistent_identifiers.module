@@ -1,0 +1,64 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_presave().
+ */
+function persistent_identifiers_entity_presave(EntityInterface $entity) {
+  $moduleHandler = \Drupal::service('module_handler');
+  if ($moduleHandler->moduleExists('context')){
+    $context_manager = \Drupal::service('context.manager');
+    $reactions = $context_manager->getActiveReactions('persistent_identifiers_add_pid');
+    // @todo: We only want to fire the first active reaction. Also, we need to check to see if there is a PID and if so, not replace it.
+    foreach ($reactions as $reaction) {
+      $reaction->execute($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ */
+function persistent_identifiers_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  if (\Drupal::currentUser()->hasPermission('mint persistent identifiers')) {
+    $config = \Drupal::config('persistent_identifiers.settings');
+    $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
+    $pid_type = $minter->getPidType();
+    $form['persistent_identifiers_node_options'] = [
+      '#type' => 'fieldset',
+      '#access' => TRUE,
+      '#title' => t('Persistent Identifier'),
+      '#weight' => 100,
+    ];
+    $form['persistent_identifiers_node_options']['mint_and_persist'] = [
+      '#type' =>'checkbox',
+      '#title' => t('Mint @pid_type', ['@pid_type' => $pid_type]),
+      '#description' => t('To mint a @pid_type persistent identifier for this node, check this box and then save the node.',  ['@pid_type' => $pid_type]),
+    ];
+
+    $form['actions']['submit']['#submit'][] = 'persistent_identifiers_mint_from_form';
+  }
+}
+
+/**
+ * Submit callback.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function persistent_identifiers_mint_from_form(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('persistent_identifiers.settings');
+  $entity = $form_state->getFormObject()->getEntity();
+  $mint_and_persist = $form_state->getValue('mint_and_persist', FALSE);
+  // @todo: Get config that defines bundle. Also, add logic to compare an existing value with the incoming one. If the same, skip.
+  if ($mint_and_persist && $entity->getEntityTypeId() == 'node' && $entity->bundle() == 'islandora_object') {
+    $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
+    $pid = $minter->mint($entity);
+    $persister = \Drupal::service($config->get('persistent_identifiers_persister')); 
+    $persister->persist($entity, $pid);
+    \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid minted for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));
+    \Drupal::messenger()->addStatus(t("Persistent identifier %pid minted and added to this node.", ['%pid' => $pid]));
+  }
+}

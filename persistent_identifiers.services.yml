@@ -1,0 +1,5 @@
+services:
+  persistent_identifers.persister.generic:
+    class: Drupal\persistent_identifiers\Persister\Generic
+  persistent_identifers.minter.uuid:
+    class: Drupal\persistent_identifiers\Minter\Uuid

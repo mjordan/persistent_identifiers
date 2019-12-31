@@ -1,0 +1,5 @@
+system.persistent_identifiers_settings:
+  title: 'Persistent Identifiers'
+  parent: system.admin_config_search
+  route_name: persistent_identifiers.settings
+  description: 'Confgure Persistent Identifers settings.'

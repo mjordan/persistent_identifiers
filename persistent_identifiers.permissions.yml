@@ -1,0 +1,4 @@
+mint persistent identifiers:
+  description: 'Mint DOIs, ARKs, etc.'
+  title: 'Mint persistent identifiers'
+  restrict access: TRUE

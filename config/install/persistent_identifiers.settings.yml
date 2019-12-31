@@ -1,0 +1,3 @@
+persistent_identifiers_target_field: 'field_identifier'
+persistent_identifiers_persister: 'persistent_identifers.persister.generic'
+persistent_identifiers_minter: 'persistent_identifers.minter.sample'

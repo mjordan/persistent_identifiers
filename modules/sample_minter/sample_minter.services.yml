@@ -1,0 +1,3 @@
+services:
+  persistent_identifers.minter.sample:
+    class: Drupal\sample_minter\Minter\Sample

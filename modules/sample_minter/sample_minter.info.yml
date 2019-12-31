@@ -1,0 +1,6 @@
+name: 'Sample Persistent ID Minter'
+description: "A sample minter accompanying the Persistent Identifers module."
+type: module
+core: 8.x
+dependencies:
+ - persistent_identifiers
