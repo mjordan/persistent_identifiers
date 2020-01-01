@@ -67,19 +67,27 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->configFactory->getEditable('persistent_identifiers.settings')
-      ->set('persistent_identifiers_target_field', trim($form_state->getValue('persistent_identifiers_target_field')))
-      ->set('persistent_identifiers_persister', $form_state->getValue('persistent_identifiers_persister'))
       ->set('persistent_identifiers_minter', $form_state->getValue('persistent_identifiers_minter'))
+      ->set('persistent_identifiers_persister', $form_state->getValue('persistent_identifiers_persister'))
+      ->set('persistent_identifiers_target_field', trim($form_state->getValue('persistent_identifiers_target_field')))
       ->save();
 
     parent::submitForm($form, $form_state);
   }
 
+  /**
+   * Gets a list of services that can be used in the admin settings form.
+   *
+   * @param string $type
+   *    Either 'minter' or 'persister'.
+   *
+   * @return array
+   *    Associative array of services filtered by $type.
+   */
   public function getServices($type) {
     $container = \Drupal::getContainer();
     $services = $container->getServiceIds();
-    $filter = 'persistent_identifers.'. $type;
-    $services = preg_grep("/$filter/", $services);
+    $services = preg_grep("/\.$type\./", $services);
     $options = [];
     foreach ($services as $service_id) {
       $service = \Drupal::service($service_id);

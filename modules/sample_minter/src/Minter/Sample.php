@@ -9,7 +9,7 @@ class Sample {
    *
    * @return string
    */
-  function getName() {
+  public function getName() {
     return t('Sample Minter');
   }
 
@@ -18,19 +18,23 @@ class Sample {
    *
    * @return string
    */
-  function getPidType() {
+  public function getPidType() {
     return 'Sample';
   }
 
   /**
    * Mints the identifier.
    *
-   * This sample minter simply returns a random string, but this method
-   * is where you would request a new DOI, ARK, etc.
+   * This sample minter simply returns a random string prepended by
+   * a namespace, but this method is where you would request a new
+   * DOI, ARK, etc.
+   *
+   * @param object $entity
+   *   The entity.
    * @return string
    */
-  function mint($entity) {
-    $config = \Drupal::config('persistent_identifiers.settings');
+  public function mint($entity) {
+    $config = \Drupal::config('sample_minter.settings');
     $namespace = $config->get('sample_minter_namespace');
     return $namespace . rand(100, 10000);
   }

@@ -47,7 +47,7 @@ Bug reports, improvements, feature requests, and PRs (especially for new minters
 
 ### Writing minters
 
-Minters are Drupal modules that define a service that mints persistent identifiers. At a minimum, a minter module contains a services file (`sample_minter.service.yml`) that registers the service. The service must use the ID pattern `persistent_identifers.minter.sample`, where `sample` is specifc to the minter.
+Minters are Drupal modules that define a service that mints persistent identifiers. At a minimum, a minter module contains a services file (`sample_minter.service.yml`) that registers the service. The service must use the ID pattern `persistent_identifiers.minter.sample`, where `sample` is specifc to the minter.
 
 The service class is implemented in the module's `src/Minter` directory. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more information.
 
