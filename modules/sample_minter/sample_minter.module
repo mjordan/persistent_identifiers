@@ -30,7 +30,7 @@ function sample_minter_form_alter(&$form, FormStateInterface &$form_state, $form
       ],
     ];
 
-    $form['actions']['submit']['#submit'][] = 'sample_minter_submit';
+    $form['#submit'][] = 'sample_minter_submit';
   }
 }
 
