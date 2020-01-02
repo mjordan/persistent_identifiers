@@ -2,12 +2,19 @@
 
 namespace Drupal\sample_minter\Minter;
 
+/**
+ * Demonstration/sample class.
+ *
+ * Mints a persistent identifier using a configurable
+ * namespace and a random string.
+ */
 class Sample {
 
   /**
    * Returns the minter's name.
    *
    * @return string
+   *   Appears in the Persistent Identifiers config form.
    */
   public function getName() {
     return t('Sample Minter');
@@ -17,9 +24,10 @@ class Sample {
    * Returns the minter's type.
    *
    * @return string
+   *   Appears in the entity edit form next to the checkbox.
    */
   public function getPidType() {
-    return 'Sample';
+    return t('Sample Identifier');
   }
 
   /**
@@ -31,7 +39,9 @@ class Sample {
    *
    * @param object $entity
    *   The entity.
+   *
    * @return string
+   *   The identifier.
    */
   public function mint($entity) {
     $config = \Drupal::config('sample_minter.settings');

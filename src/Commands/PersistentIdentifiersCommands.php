@@ -8,6 +8,7 @@ use Drush\Commands\DrushCommands;
  * Drush commandfile.
  */
 class PersistentIdentifiersCommands extends DrushCommands {
+
   public function __construct() {
     $this->module_config = \Drupal::config('persistent_identifiers.settings');
   }
@@ -37,9 +38,10 @@ class PersistentIdentifiersCommands extends DrushCommands {
   /**
    * Testing twig templates in Drush cause I'm lazy.
    *
-   * Using this technique, we can have minters build XML for posting to DataCite, etc.
-   * Templates can be strings (and hence stored in config) instead of files. Would be
-   * useful to allow admins to use tokens in their templates.
+   * Using this technique, we can have minters build XML for posting to
+   * DataCite, etc. Templates can be strings (and hence stored in config)
+   * instead of files. Would be useful to allow admins to use tokens in
+   * their templates.
    *
    * @command persistent_identifiers:twig_test
    * @usage persistent_identifiers:twig_test
@@ -48,7 +50,7 @@ class PersistentIdentifiersCommands extends DrushCommands {
      $template = 'Hello {{ name }}';
      $output = \Drupal::service('twig')
             ->createTemplate($template)
-            ->render(array('name' => 'Joe'));
+            ->render(['name' => 'Joe']);
 
       $this->logger()->notice(
           dt(
@@ -56,6 +58,6 @@ class PersistentIdentifiersCommands extends DrushCommands {
               ['@output' => $output]
             )
       );
-  }
-}
+   }
 
+}
