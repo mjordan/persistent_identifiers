@@ -1,3 +1,5 @@
 services:
+  # The list of minters at /admin/config/persistent_identifiers/settings is derived
+  # from minters that follow this naming pattern.
   sample_minter.minter.sample:
     class: Drupal\sample_minter\Minter\Sample

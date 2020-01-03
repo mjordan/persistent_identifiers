@@ -1,6 +1,6 @@
 # Persistent Identifiers
 
-> Note: This is the very beginning of a module to address https://github.com/Islandora/documentation/issues/1042 and https://github.com/Islandora/documentation/issues/1256. It is not yet a production module.
+> Note: This is the start of a module to address https://github.com/Islandora/documentation/issues/1042 and https://github.com/Islandora/documentation/issues/1256. It is not yet a production module.
 
 ## Introduction
 
@@ -10,7 +10,7 @@ This module's primary use case was to provide this service for [Islandora](https
 
 Persistent identifiers can be minted by a variety of sources, such as CrossRef, DataCite, or EZID. Regardless of the specific source, many of the tasks involved in assigning persistent identifiers to Drupal nodes (or other entities) are the same - providing a "Mint Identifier" button in a node edit form, integration into automated workflows, or persisting identifiers to fields on an entity.
 
-This module provides some common tasks while allowing small sets of code (specifically Symfony/Drupal services) to handle the particulars of minting and persisting. In addition, a Drupal site admin might want to mix and match minting and persisting services. Generally speaking, this module's goal is to allow site admins to select from a variety of minters and persisters they want, while allowing developers to write as little code as necessary to create new minter and persister services.
+This module provides some common tasks while allowing small amounts of code (specifically Drupal services) to handle the particulars of minting and persisting. In addition, a Drupal site admin might want to mix and match minting and persisting services. Generally speaking, this module's goal is to allow site admins to select the minters and persisters they want, while allowing developers to write as little code as necessary to create new minter and persister services.
 
 ## Requirements
 
@@ -47,9 +47,9 @@ Bug reports, improvements, feature requests, and PRs (especially for new minters
 
 ### Writing minters
 
-Minters are Drupal modules that define a service that mints persistent identifiers. At a minimum, a minter module contains a services file (`sample_minter.service.yml`) that registers the service. The service must use the ID pattern `persistent_identifiers.minter.sample`, where `sample` is specifc to the minter.
+At a minimum, a minter module contains a services file (e.g., `sample_minter.service.yml`) that mints the identifier. The service must use the ID pattern `foo.minter.sample`, where `foo` is the module's namespace and `sample` is unique to the minter. If the minter requires admin settings, the module should also include an implementation of `hook_form_alter()` that adds minter-specific settings to the admin form at `/admin/config/persistent_identifiers/settings`.
 
-The service class is implemented in the module's `src/Minter` directory. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more information.
+The service class is implemented in the module's `src/Minter` directory. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more detail.
 
 ## License
 

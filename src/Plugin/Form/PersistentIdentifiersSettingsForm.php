@@ -61,6 +61,21 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('persistent_identifiers_target_field'),
     ];
 
+    // For now, we're only interested in nodes.
+    $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
+    $options = [];
+    foreach ($bundle_info as $name => $details) {
+      $options[$name] = $details['label'];
+    }
+    $form['persistent_identifiers_bundles'] = [
+      '#weight' => 100,
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => $config->get('persistent_identifiers_bundles'),
+      '#description' => $this->t('Allow persistent identifier minting for the checked content types.'),
+      '#title' => $this->t('Content types'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -72,6 +87,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       ->set('persistent_identifiers_minter', $form_state->getValue('persistent_identifiers_minter'))
       ->set('persistent_identifiers_persister', $form_state->getValue('persistent_identifiers_persister'))
       ->set('persistent_identifiers_target_field', trim($form_state->getValue('persistent_identifiers_target_field')))
+      ->set('persistent_identifiers_bundles', array_values($form_state->getValue('persistent_identifiers_bundles')))
       ->save();
 
     parent::submitForm($form, $form_state);

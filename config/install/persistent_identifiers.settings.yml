@@ -1,3 +1,4 @@
 persistent_identifiers_target_field: 'field_identifier'
 persistent_identifiers_persister: 'persistent_identifiers.persister.generic'
 persistent_identifiers_minter: 'persistent_identifiers.minter.uuid'
+persistent_identifiers_bundles: []

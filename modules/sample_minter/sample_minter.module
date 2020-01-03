@@ -10,9 +10,14 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_form_alter().
  *
- * This example adds a field to the Persistent Identifiers admin
- * settings form that is specific to the minter provided by this module.
- * The value of the field is saved in the submit callback below.
+ * This example adds a field to the form at
+ * /admin/config/persistent_identifiers/settings that is specific to the
+ * minter provided by this module. The value of the field is saved in the
+ * submit callback below.
+ *
+ * Also, note that the list of minters at /admin/config/persistent_identifiers/settings
+ * is derived from minters defined in minter modules' .services.yml files, not by
+ * code in hook_form_alter().
  */
 function sample_minter_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   if ($form_id == 'persistent_identifiers_admin_settings') {
@@ -36,6 +41,9 @@ function sample_minter_form_alter(&$form, FormStateInterface &$form_state, $form
 
 /**
  * Submit callback.
+ *
+ * Saves the value of the minter-specific field defined in the implementation
+ * of hook_form_alter() above.
  *
  * @param array $form
  *   The form.
