@@ -45,7 +45,7 @@ function persistent_identifiers_form_node_form_alter(&$form, FormStateInterface 
       $form['persistent_identifiers_node_options']['mint_and_persist'] = [
         '#type' => 'checkbox',
         '#title' => t('Mint @pid_type', ['@pid_type' => $pid_type]),
-        '#description' => t('To mint a @pid_type persistent identifier for this node, check this box and then save the node.', ['@pid_type' => $pid_type]),
+        '#description' => t('To mint a @pid_type for this node, check this box and then save the node.', ['@pid_type' => $pid_type]),
       ];
 
       $form['actions']['submit']['#submit'][] = 'persistent_identifiers_mint_from_form';

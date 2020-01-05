@@ -27,7 +27,7 @@ class Uuid {
    *   Appears in the entity edit form next to the checkbox.
    */
   public function getPidType() {
-    return 'UUID';
+    return 'UUID-based persistent identifier';
   }
 
   /**
