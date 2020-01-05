@@ -16,7 +16,7 @@ function persistent_identifiers_entity_presave(EntityInterface $entity) {
   if ($module_handler->moduleExists('context')) {
     $context_manager = \Drupal::service('context.manager');
     $reactions = $context_manager->getActiveReactions('persistent_identifiers_add_pid');
-    // @todo: We only want to fire the first active reaction. Also, we need to check to see if there is a persistent identifier and if so, not replace it.
+    // @todo: We only want to fire the first active reaction.
     foreach ($reactions as $reaction) {
       $reaction->execute($entity);
     }
@@ -32,12 +32,8 @@ function persistent_identifiers_form_node_form_alter(&$form, FormStateInterface 
   $content_type = $entity->bundle();
   $allowed_types = $config->get('persistent_identifiers_bundles');
 
-  // DEBUG: Print some stuff to figure out why the following in_array() test is not working.
-  \Drupal::messenger()->addMessage($content_type);
-  \Drupal::messenger()->addMessage(var_export($allowed_types, true));
-
   if (\Drupal::currentUser()->hasPermission('mint persistent identifiers')) {
-    if (in_array($content_type, $allowed_types)) { // <- Not working?
+    if (in_array($content_type, $allowed_types)) { // <- @todo: Not working?
       $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
       $pid_type = $minter->getPidType();
       $form['persistent_identifiers_node_options'] = [
@@ -68,14 +64,20 @@ function persistent_identifiers_form_node_form_alter(&$form, FormStateInterface 
 function persistent_identifiers_mint_from_form(array &$form, FormStateInterface $form_state) {
   $config = \Drupal::config('persistent_identifiers.settings');
   $entity = $form_state->getFormObject()->getEntity();
+  $content_type = $entity->bundle();
+  $allowed_types = $config->get('persistent_identifiers_bundles');
   $mint_and_persist = $form_state->getValue('mint_and_persist', FALSE);
-  // @todo:  Limit to content type, as above. Also, add logic to compare an existing value with the incoming one. If the same, skip.
-  if ($mint_and_persist && $entity->getEntityTypeId() == 'node' && $entity->bundle() == 'islandora_object') {
+  if ($mint_and_persist && $entity->getEntityTypeId() == 'node' && in_array($content_type, $allowed_types)) {
     $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
     $pid = $minter->mint($entity);
     $persister = \Drupal::service($config->get('persistent_identifiers_persister'));
-    $persister->persist($entity, $pid);
-    \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid minted for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));
-    \Drupal::messenger()->addStatus(t("Persistent identifier %pid minted and added to this node.", ['%pid' => $pid]));
+    if ($persister->persist($entity, $pid)) {
+      \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid minted for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));
+      \Drupal::messenger()->addStatus(t("Persistent identifier %pid minted and added to this node.", ['%pid' => $pid]));
+    }
+    else {
+      \Drupal::logger('persistent_identifiers')->warning(t("Persistent identifier %pid minted for node @nid but not persisted.", ['%pid' => $pid, '@nid' => $entity->id()]));
+      \Drupal::messenger()->addWarning(t("Persistent identifier %pid minted but not added to this node.", ['%pid' => $pid]));
+    }
   }
 }

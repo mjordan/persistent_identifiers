@@ -37,15 +37,23 @@ class Generic {
    *   Whether or not to save the entity. If called from a context
    *   where the entity is saved automatically, such as from within
    *   hook_entity_presave(), this should be FALSE.
+   *
+   * @return bool
+   *   TRUE if persisted, FALSE if not. @todo: Check for failure to assign
+   *   field value and if fails, return FALSE.
    */
   public function persist(&$entity, $pid, $save = TRUE) {
-    $target_field = $this->config->get('persistent_identifiers_target_field');
-    if ($entity->hasField('field_identifier')) {
-      $entity->set('field_identifier', $pid);
+    $target_field = trim($this->config->get('persistent_identifiers_target_field'));
+    if ($entity->hasField($target_field)) {
+      $entity->{$target_field}[] = $pid;
+    }
+    else {
+        \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));
     }
     if ($save) {
       $entity->save();
     }
+    return TRUE;
   }
 
 }
