@@ -39,11 +39,13 @@ class Sample {
    *
    * @param object $entity
    *   The entity.
+   * @param mixed $extra
+   *   Extra data the minter needs, for example from the node edit form.
    *
    * @return string
    *   The identifier.
    */
-  public function mint($entity) {
+  public function mint($entity, $extra = NULL) {
     $config = \Drupal::config('sample_minter.settings');
     $namespace = $config->get('sample_minter_namespace');
     return $namespace . rand(100, 10000);

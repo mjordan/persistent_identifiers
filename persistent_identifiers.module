@@ -72,7 +72,7 @@ function persistent_identifiers_mint_from_form(array &$form, FormStateInterface 
   $mint_and_persist = $form_state->getValue('mint_and_persist', FALSE);
   if ($mint_and_persist && $entity->getEntityTypeId() == 'node' && in_array($content_type, $allowed_types)) {
     $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
-    $pid = $minter->mint($entity);
+    $pid = $minter->mint($entity, $form_state);
     $persister = \Drupal::service($config->get('persistent_identifiers_persister'));
     if ($persister->persist($entity, $pid)) {
       \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid minted for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));

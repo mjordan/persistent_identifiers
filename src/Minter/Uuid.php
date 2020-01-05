@@ -33,10 +33,15 @@ class Uuid {
   /**
    * Mints the identifier.
    *
+   * @param object $entity
+   *   The node, etc.
+   * @param mixed $extra
+   *   Extra data the minter needs, for example from the node edit form.
+   *
    * @return string
    *   The identifier.
    */
-  public function mint($entity) {
+  public function mint($entity, $extra = NULL) {
     $base_url = $host = \Drupal::request()->getSchemeAndHttpHost();
     // Note: The URL resulting from this minter does not resolve
     // to the entity. It is for demonstration purposes only.
