@@ -2,13 +2,15 @@
 
 namespace Drupal\sample_minter\Minter;
 
+use Drupal\persistent_identifiers\MinterInterface;
+
 /**
  * Demonstration/sample class.
  *
  * Mints a persistent identifier using a configurable
  * namespace and a random string.
  */
-class Sample {
+class Sample implements MinterInterface {
 
   /**
    * Returns the minter's name.

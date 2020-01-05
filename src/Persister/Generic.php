@@ -2,10 +2,12 @@
 
 namespace Drupal\persistent_identifiers\Persister;
 
+use Drupal\persistent_identifiers\PersisterInterface;
+
 /**
  * Persists identifier string to a text field.
  */
-class Generic {
+class Generic implements PersisterInterface {
 
   /**
    * Constructor.

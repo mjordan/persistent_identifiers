@@ -2,12 +2,14 @@
 
 namespace Drupal\persistent_identifiers\Minter;
 
+use Drupal\persistent_identifiers\MinterInterface;
+
 /**
  * Demonstration/sample class.
  *
  * Mints a persistent identifier based on the entity's UUID.
  */
-class Uuid {
+class Uuid implements MinterInterface {
 
   /**
    * Returns the minter's name.

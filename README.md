@@ -49,7 +49,7 @@ Bug reports, improvements, feature requests, and PRs (especially for new minters
 
 At a minimum, a minter module contains a services file (e.g., `sample_minter.service.yml`) that mints the identifier. The service must use the ID pattern `foo.minter.sample`, where `foo` is the module's namespace and `sample` is unique to the minter. If the minter requires admin settings, the module should also include an implementation of `hook_form_alter()` that adds minter-specific settings to the admin form at `/admin/config/persistent_identifiers/settings`.
 
-The service class is implemented in the module's `src/Minter` directory. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more detail.
+The service class is implemented in the module's `src/Minter` directory, and implements `MinterInterface`. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more detail.
 
 ## License
 
