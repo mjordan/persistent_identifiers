@@ -34,7 +34,7 @@ Currently, this module only demonstrates some basic ideas. It "mints" and "persi
 
 1. When you save a node. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit for similar to this:
   ![Mint checkbox](docs/images/mint_checkbox.png)
-1. When you run the Drush command `drush persistent_identifiers:add_pid x` (where x is a node ID)
+1. When you run the Drush command `drush persistent_identifiers:add-pid x` (where x is a node ID)
 1. When you configure a Context using the "Add persistent identifier" reaction.
 
 ## Current maintainer
