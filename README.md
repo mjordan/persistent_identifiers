@@ -30,11 +30,11 @@ For production use, you will need access to an API for minting persistent identi
 
 ## Usage
 
-Currently, this module only demonstrates some basic ideas. It "mints" and "persists" identifiers in two ways:
+Currently, this module only demonstrates some basic ideas. It "mints" and "persists" identifiers in three ways:
 
 1. When you save a node. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit for similar to this:
   ![Mint checkbox](docs/images/mint_checkbox.png)
-1. When you run the Drush command `drush persistent_identifiers:add-pid x` (where x is a node ID)
+1. When you use Views Bulk Operations to mint persistent IDs for a batch of nodes.
 1. When you configure a Context using the "Add persistent identifier" reaction.
 
 ## Current maintainer

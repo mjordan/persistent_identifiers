@@ -1,5 +1,0 @@
-services:
-  persistent_identifiers.commands:
-    class: \Drupal\persistent_identifiers\Commands\PersistentIdentifiersCommands
-    tags:
-      - { name: drush.command }
