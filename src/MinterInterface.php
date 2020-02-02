@@ -30,10 +30,10 @@ interface MinterInterface {
    * @param object $entity
    *   The node, etc.
    * @param mixed $extra
-   *   Extra data the minter needs, for example from the node edit form.
+   *   Extra data the minter needs, for example from the node edit form state.
    *
-   * @return string
-   *   The identifier.
+   * @return string|null
+   *   The identifier or NULL if it is not available/failed/etc.
    */
   public function mint($entity, $extra = NULL);
 
