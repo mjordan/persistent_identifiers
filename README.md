@@ -15,6 +15,7 @@ This module provides some common tasks while allowing small amounts of code (spe
 Currently, the following Minters are available:
 
 * Handle (contributed by @elizoller)
+* DOIs from DataCite (coming soon)
 
 The following Persisters are available:
 
