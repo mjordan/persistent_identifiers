@@ -1,0 +1,5 @@
+services:
+  # The list of minters at /admin/config/persistent_identifiers/settings is derived
+  # from minters that follow this naming pattern.
+  hdl.minter.hdl:
+    class: Drupal\hdl\Minter\Hdl

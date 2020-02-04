@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Contains the hdl.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ *
+ * This example adds a field to the form at
+ * /admin/config/persistent_identifiers/settings that is specific to the
+ * minter provided by this module. The value of the field is saved in the
+ * submit callback below.
+ *
+ * Also, note that the list of minters at /admin/config/persistent_identifiers/settings
+ * is derived from minters defined in minter modules' .services.yml files, not by
+ * code in hook_form_alter().
+ */
+function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if ($form_id == 'persistent_identifiers_admin_settings') {
+    $config = \Drupal::config('hdl.settings');
+    $form['hdl_prefix'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Handle identifier prefix',
+      '#default_value' => $config->get('hdl_prefix'),
+      '#description' => t("This string will be prefix used for the handle. Ie. https://handle.net/2286.9 where 2286.9 is the prefix."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_qualifier'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Handle identifier qualifier',
+      '#default_value' => $config->get('hdl_qualifier'),
+      '#description' => t("This string will be prepended to identifier to make the unique handle. You might use it to distinguish different types of objects, like R.C. for Repository Collection and R.O. for Repository Object and R.M. for Repository Media. So your handle might look like https://handle.net/2286.9/R.O.7"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_admin_handle'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Admin Handle',
+      '#default_value' => $config->get('hdl_admin_handle'),
+      '#description' => t("The Admin Handle used for permissions in the handle JSON"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_admin_index'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Admin Index',
+      '#default_value' => $config->get('hdl_admin_index'),
+      '#description' => t("The Admin index used for permissions in the handle JSON"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_handle_permissions'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Handle Permissions',
+      '#default_value' => $config->get('hdl_handle_permissions'),
+      '#description' => t("The permissions to have to the admin user on the handle"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_handle_api_endpoint'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Handle API Endpoint',
+      '#default_value' => $config->get('hdl_handle_api_endpoint'),
+      '#description' => t("The API endpoint for your handle server"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['hdl_handle_basic_auth_password'] = [
+      '#type' => 'password',
+      // '#access' => TRUE,
+      '#title' => 'Handle Basic Auth Password',
+      '#default_value' => $config->get('hdl_handle_basic_auth_password'),
+      '#description' => t("The password to be used with the admin handle and index to authenticate for the API"),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
+        ],
+      ],
+    ];
+
+    $form['#submit'][] = 'hdl_submit';
+  }
+}
+
+/**
+ * Submit callback.
+ *
+ * Saves the value of the minter-specific field defined in the implementation
+ * of hook_form_alter() above.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function hdl_submit(array &$form, FormStateInterface $form_state) {
+  $existing_config = \Drupal::config('hdl.settings');
+  $admin_handle = $form_state->getValue('hdl_admin_handle', $existing_config->get('hdl_admin_handle'));
+  $prefix = $form_state->getValue('hdl_prefix', $existing_config->get('hdl_prefix'));
+  $qualifier = $form_state->getValue('hdl_qualifier', $existing_config->get('hdl_qualifier'));
+  $api_endpoint = $form_state->getValue('hdl_handle_api_endpoint', $existing_config->get('hdl_handle_api_endpoint'));
+  $index = $form_state->getValue('hdl_admin_index', $existing_config->get('hdl_admin_index'));
+  $permissions = $form_state->getValue('hdl_handle_permissions', $existing_config->get('hdl_handle_permissions'));
+  $password = $form_state->getValue('hdl_handle_basic_auth_password', $existing_config->get('hdl_handle_basic_auth_password'));
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('hdl.settings')
+    ->set('hdl_admin_handle', trim($admin_handle))
+    ->set('hdl_prefix', trim($prefix))
+    ->set('hdl_qualifier', trim($qualifier))
+    ->set('hdl_handle_api_endpoint', trim($api_endpoint))
+    ->set('hdl_admin_index', trim($index))
+    ->set('hdl_handle_permissions', trim($permissions))
+    ->set('hdl_handle_basic_auth_password', trim($password))
+    ->save();
+}

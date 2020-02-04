@@ -1,0 +1,6 @@
+hdl_prefix: '2286.9'
+hdl_qualifier: 'R.2.N'
+hdl_admin_handle: '2286/ASU_ADMIN'
+hdl_admin_index: 300
+hdl_handle_api_endpoint: 'https://handle-qa.lib.asu.edu:8000/api/handles/'
+hdl_handle_permissions: '111111111111'
