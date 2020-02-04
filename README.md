@@ -12,6 +12,14 @@ Persistent identifiers can be minted by a variety of sources, such as CrossRef, 
 
 This module provides some common tasks while allowing small amounts of code (specifically Drupal services) to handle the particulars of minting and persisting. In addition, a Drupal site admin might want to mix and match minting and persisting services. Generally speaking, this module's goal is to allow site admins to select the minters and persisters they want, while allowing developers to write as little code as necessary to create new minter and persister services.
 
+Currently, the following Minters are available:
+
+* Handle (contributed by @elizoller)
+
+The following Persisters are available:
+
+* Generic Text Field
+
 ## Requirements
 
 Drupal 8. This module is not specific to Islandora.
@@ -22,6 +30,7 @@ For production use, you will need access to an API for minting persistent identi
 
 1. Clone this repo into your Islandora's `drupal/web/modules/contrib` directory.
 1. Enable the module either under the "Admin > Extend" menu or by running `drush en -y persistent_identifiers`.
+1. Enable the Minter module that you want to use.
 
 ## Configuration
 
