@@ -31,6 +31,22 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('persistent_identifiers.settings');
+
+    // For now, we're only interested in nodes.
+    $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
+    $options = [];
+    foreach ($bundle_info as $name => $details) {
+      $options[$name] = $details['label'];
+    }
+    $form['persistent_identifiers_bundles'] = [
+      '#weight' => -10,
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => $config->get('persistent_identifiers_bundles'),
+      '#description' => $this->t('Allow persistent identifier minting for the checked content types.'),
+      '#title' => $this->t('Content types'),
+    ];
+
     $minters = $this->getServices('minter');
     $form['persistent_identifiers_minter'] = [
       '#type' => 'radios',
@@ -64,20 +80,6 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('persistent_identifiers_target_field'),
     ];
 
-    // For now, we're only interested in nodes.
-    $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
-    $options = [];
-    foreach ($bundle_info as $name => $details) {
-      $options[$name] = $details['label'];
-    }
-    $form['persistent_identifiers_bundles'] = [
-      '#weight' => 100,
-      '#type' => 'checkboxes',
-      '#options' => $options,
-      '#default_value' => $config->get('persistent_identifiers_bundles'),
-      '#description' => $this->t('Allow persistent identifier minting for the checked content types.'),
-      '#title' => $this->t('Content types'),
-    ];
 
     return parent::buildForm($form, $form_state);
   }

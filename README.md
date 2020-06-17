@@ -14,8 +14,8 @@ This module provides some common tasks while allowing small amounts of code (spe
 
 Currently, the following Minters are available:
 
-* Handle (contributed by @elizoller)
-* DOIs from DataCite (coming soon)
+* Handle (contributed by [@elizoller](https://github.com/elizoller))
+* DOIs from DataCite
 
 The following Persisters are available:
 
@@ -40,12 +40,11 @@ For production use, you will need access to an API for minting persistent identi
 
 ## Usage
 
-Currently, this module only demonstrates some basic ideas. It "mints" and "persists" identifiers in three ways:
+This module works with a submodule (there are several) to "mint" and "persist" identifiers in two ways:
 
-1. When you save a node. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit for similar to this:
+1. When you save a node. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit form similar to this:
   ![Mint checkbox](docs/images/mint_checkbox.png)
-1. When you use Views Bulk Operations to mint persistent IDs for a batch of nodes.
-1. When you configure a Context using the "Add persistent identifier" reaction.
+1. When you use Views Bulk Operations to mint persistent IDs for a batch of nodes (if the minter module provides an Action for use in Views Bulk Operations).
 
 ## Current maintainer
 
