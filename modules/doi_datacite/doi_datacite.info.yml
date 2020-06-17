@@ -1,0 +1,6 @@
+name: 'DataCite DOIs'
+description: "Module for minting DOIs from DataCite."
+type: module
+core: 8.x
+dependencies:
+ - persistent_identifiers

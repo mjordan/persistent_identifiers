@@ -1,0 +1,3 @@
+services:
+  doi_datacite.minter.datacitedois:
+    class: Drupal\doi_datacite\Minter\Dois

@@ -1,0 +1,25 @@
+{
+  "name": "mjordan/doi_datacite",
+  "description": "Drupal 8 Module that mints DOIs from DataCite via the Persistent Identifiers module.",
+  "type": "drupal-module",
+  "keywords": ["Drupal"],
+  "homepage": "https://github.com/mjordan/doi_datacite",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Mark Jordan",
+      "email": "mjordan@sfu.ca",
+      "role": "Maintainer"
+    }
+  ],
+  "repositories": [
+    {
+      "name": "mjordan/persistent_identifiers",
+      "type": "vcs",
+      "url": "git@github.com:mjordan/persistent_identifiers.git"
+    }
+  ],
+  "require": {
+    "mjordan/persistent_identifiers": "dev-master"
+  }
+}

@@ -1,0 +1,6 @@
+doi_datacite_api_endpoint: 'https://api.test.datacite.org/dois'
+doi_datacite_prefix: '10.99999'
+doi_datacite_suffix_source: 'uuid'
+doi_datacite_username: 'MY.USER'
+doi_datacite_password: 'mypassword'
+doi_datacite_field_mappings: 'field_edtf_date_issued:publicationYear'
