@@ -113,6 +113,8 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
     $minter_id = Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_minter');
     if ($minter_id == 'doi_datacite.minter.datacitedois') {
       $minter_service = \Drupal::service('doi_datacite.minter.datacitedois');
+      $datacite_metadata_values = $minter_service->getDataCiteElementValues($entity->id());
+      devel_debug($datacite_metadata_values, 'From form');
       // DataCite requires the use of this following controlled list of resource types.
       $resource_type_values = $minter_service->getResourceTypes();
       // Only show this form element if the user checks the "Mint DataCite DOI" box.
@@ -144,6 +146,7 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
       $form['doi_datacite_required_fields']['doi_datacite_publication_year'] = [
         '#title' => t('Publication year'),
         '#type' => 'textfield',
+        '#default_value' => $datacite_metadata_values['publicationYear'],
         '#description' => t("Must be in YYYY format."),
       ];
       $form['doi_datacite_required_fields']['doi_datacite_publisher'] = [

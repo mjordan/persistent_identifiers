@@ -211,4 +211,50 @@ class Dois implements MinterInterface {
       return NULL;
     }
   }
+
+  /**
+   * Attempts to prepopulate DataCite-specific metadata fields.
+   *
+   * @param int $nid
+   *   The node ID.
+   *
+   * @return array
+   *   An associative array of metadata values that can be gotten from
+   *   existing node fields, to provide default values for the required DataCite metadata.
+   */
+  public function getDataCiteElementValues($nid) {
+    $config = \Drupal::config('doi_datacite.settings');
+    $mappings = preg_split("/\\r\\n|\\r|\\n/", $config->get('doi_datacite_field_mappings'));
+    $datacite_values = [
+      'creators' => '',
+      'publicationYear' => '',
+      'publisher' => '',
+    ];
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    if (count($mappings) > 0) {
+      foreach ($mappings as $mapping) {
+        $node_field_values = [];
+        list($node_field_name, $datacite_element_name) = explode(':', $mapping);
+        if ($node->hasField($node_field_name)) {
+          $node_field_values = $node->get($node_field_name)->getValue();
+	  // DataCite element-specific logic.
+	  if ($datacite_element_name == 'publicationYear') {
+            // If there are multiple values for this field, take the first.
+            preg_match('/\d\d\d\d/', $node_field_values[0]['value'], $matches);
+            $year = $matches[0];
+            $datacite_values['publicationYear'] = trim($year);
+	  }
+	  if ($datacite_element_name == 'publicationYear') {
+            // ...
+          } 
+	  if ($datacite_element_name == 'creators') {
+            // ...
+          } 
+        } 
+      } 
+    }
+    // devel_debug($datacite_values, 'DataCite values');
+    return $datacite_values;
+  }
+
 }

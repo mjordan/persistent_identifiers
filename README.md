@@ -14,7 +14,7 @@ This module provides some common tasks while allowing small amounts of code (spe
 
 Currently, the following Minters are available:
 
-* [Handle](modules/hdl/README.md) (contributed by [@elizoller](https://github.com/elizoller))
+* [Handle](modules/hdl) (contributed by [@elizoller](https://github.com/elizoller))
 * [DOIs from DataCite](modules/doi_datacite/README.md)
 
 The following Persisters are available:
