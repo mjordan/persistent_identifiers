@@ -230,35 +230,37 @@ class Dois implements MinterInterface {
       'publicationYear' => '',
       'publisher' => '',
     ];
-    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-    if (count($mappings) > 0) {
-      foreach ($mappings as $mapping) {
-        $node_field_values = [];
-        list($node_field_name, $datacite_element_name) = explode(':', $mapping);
-        if ($node->hasField($node_field_name)) {
-          $node_field_values = $node->get($node_field_name)->getValue();
-	  // DataCite element-specific logic. If there are multiple values for
-	  // fields, take the first.
-	  if ($datacite_element_name == 'publicationYear') {
-            if (array_key_exists('value', $node_field_values[0])) {
-              preg_match('/\d\d\d\d/', $node_field_values[0]['value'], $matches);
-              $year = $matches[0];
-	      $datacite_values['publicationYear'] = trim($year);
-	    }
-	  }
-	  if ($datacite_element_name == 'publisher') {
-            if (array_key_exists('value', $node_field_values[0])) {
-              $datacite_values['publisher'] = $node_field_values[0]['value'];
-            }
-          }
-	  if ($datacite_element_name == 'creators') {
-            if (array_key_exists('value', $node_field_values[0])) {
-              $datacite_values['creators'] = $node_field_values[0]['value'];
-	    }
-          } 
-        } 
-      } 
+
+    if (empty($nid)) {
+      return $datacite_values;
     }
+
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    // Creators.
+    $creators_field_name = $config->get('doi_datacite_creators_mapping');
+    if ($node->hasField($creators_field_name)) {
+      $node_creators_field_values = $node->get($creators_field_name)->getValue();
+      if (array_key_exists('value', $node_creators_field_values[0])) {
+        $datacite_values['creators'] = $node_creators_field_values[0]['value'];
+      }
+    }
+    // Publisher.
+    $publisher_field_name = $config->get('doi_datacite_publisher_mapping');
+    if ($node->hasField($publisher_field_name)) {
+      $node_publisher_field_values = $node->get($publisher_field_name)->getValue();
+      if (array_key_exists('value', $node_publisher_field_values[0])) {
+        $datacite_values['publisher'] = $node_publisher_field_values[0]['value'];
+      }
+    }
+    // Publication year.
+    $publication_year_field_name = $config->get('doi_datacite_publicationyear_mapping');
+    if ($node->hasField($publication_year_field_name)) {
+      $node_publication_year_field_values = $node->get($publication_year_field_name)->getValue();
+      if (array_key_exists('value', $node_publication_year_field_values[0])) {
+        $datacite_values['publicationYear'] = $node_publication_year_field_values[0]['value'];
+      }
+    }
+
     return $datacite_values;
   }
 
