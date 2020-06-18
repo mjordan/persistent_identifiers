@@ -83,7 +83,7 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
       '#type' => 'textarea',
       '#title' => t('Node to DataCite field mappings'),
       '#default_value' => $config->get('doi_datacite_field_mappings'),
-      '#description' => t('Mappings from node fields to DataCite metadata elements. Separate using colon (:), one mapping per line.'),
+      '#description' => t('Mappings from node fields to DataCite metadata elements. Separate using colon (:), one mapping per line. Required DataCite elements are "creators", "publisher", "publicationYear".'),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
@@ -114,7 +114,6 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
     if ($minter_id == 'doi_datacite.minter.datacitedois') {
       $minter_service = \Drupal::service('doi_datacite.minter.datacitedois');
       $datacite_metadata_values = $minter_service->getDataCiteElementValues($entity->id());
-      devel_debug($datacite_metadata_values, 'From form');
       // DataCite requires the use of this following controlled list of resource types.
       $resource_type_values = $minter_service->getResourceTypes();
       // Only show this form element if the user checks the "Mint DataCite DOI" box.
@@ -137,21 +136,30 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
         '#title' => t("DataCite resource types"),
         '#description' => t("Metadata submitted to DataCite requires one of these " .
 	"resource types."),
+        '#label_attributes' => ['class' =>'form-required'],
       ];
       $form['doi_datacite_required_fields']['doi_datacite_creator'] = [
         '#type' => 'textfield',
         '#title' => t('Creator'),
         '#description' => t("Separate repeated values with semicolons."),
+        '#default_value' => $datacite_metadata_values['creators'],
+	'#label_attributes' => ['class' =>'form-required'],
+	'#placeholder' => 'Sorry, could not prefill creators...'
       ];
       $form['doi_datacite_required_fields']['doi_datacite_publication_year'] = [
         '#title' => t('Publication year'),
         '#type' => 'textfield',
         '#default_value' => $datacite_metadata_values['publicationYear'],
         '#description' => t("Must be in YYYY format."),
+        '#label_attributes' => ['class' =>'form-required'],
+	'#placeholder' => 'Sorry, could not prefill publication year...'
       ];
       $form['doi_datacite_required_fields']['doi_datacite_publisher'] = [
         '#title' => t('Publisher'),
         '#type' => 'textfield',
+        '#default_value' => $datacite_metadata_values['publisher'],
+        '#label_attributes' => ['class' =>'form-required'],
+	'#placeholder' => 'Sorry, could not prefill publisher...'
       ];
 
       $form['#validate'][] = 'doi_datacite_check_for_required_datacite_elements';

@@ -1,14 +1,13 @@
 # Persistent Identifiers
 
-> Note: This is the start of a module to address https://github.com/Islandora/documentation/issues/1042 and https://github.com/Islandora/documentation/issues/1256. It is not yet a production module.
 
 ## Introduction
 
-Drupal 8 Module that provides a generalized framework for minting and persisting persistent identifiers (DOIs, ARKs, etc.) for Drupal Entities.
+Drupal 8 Module that provides a generalized framework for minting and persisting persistent identifiers (DOIs, ARKs, etc.) for nodes.
 
-This module's primary use case was to provide this service for [Islandora](https://islandora.ca/) objects, but it can be used without Islandora.
+This module's primary use case was to provide this service for [Islandora](https://islandora.ca/) objects, but it can be used without Islandora. Preliminary discussion that lead to this module can be found at https://github.com/Islandora/documentation/issues/1042 and https://github.com/Islandora/documentation/issues/1256.
 
-Persistent identifiers can be minted by a variety of sources, such as CrossRef, DataCite, or EZID. Regardless of the specific source, many of the tasks involved in assigning persistent identifiers to Drupal nodes (or other entities) are the same - providing a "Mint Identifier" button in a node edit form, integration into automated workflows, or persisting identifiers to fields on an entity.
+Persistent identifiers can be minted by a variety of sources, such as CrossRef, DataCite, or EZID. Regardless of the specific source, many of the tasks involved in assigning persistent identifiers to Drupal nodes are the same - providing a "Mint Identifier" button in a node edit form, integration into automated workflows, or persisting identifiers to fields on an entity.
 
 This module provides some common tasks while allowing small amounts of code (specifically Drupal services) to handle the particulars of minting and persisting. In addition, a Drupal site admin might want to mix and match minting and persisting services. Generally speaking, this module's goal is to allow site admins to select the minters and persisters they want, while allowing developers to write as little code as necessary to create new minter and persister services.
 

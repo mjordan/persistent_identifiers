@@ -237,23 +237,28 @@ class Dois implements MinterInterface {
         list($node_field_name, $datacite_element_name) = explode(':', $mapping);
         if ($node->hasField($node_field_name)) {
           $node_field_values = $node->get($node_field_name)->getValue();
-	  // DataCite element-specific logic.
+	  // DataCite element-specific logic. If there are multiple values for
+	  // fields, take the first.
 	  if ($datacite_element_name == 'publicationYear') {
-            // If there are multiple values for this field, take the first.
-            preg_match('/\d\d\d\d/', $node_field_values[0]['value'], $matches);
-            $year = $matches[0];
-            $datacite_values['publicationYear'] = trim($year);
+            if (array_key_exists('value', $node_field_values[0])) {
+              preg_match('/\d\d\d\d/', $node_field_values[0]['value'], $matches);
+              $year = $matches[0];
+	      $datacite_values['publicationYear'] = trim($year);
+	    }
 	  }
-	  if ($datacite_element_name == 'publicationYear') {
-            // ...
-          } 
+	  if ($datacite_element_name == 'publisher') {
+            if (array_key_exists('value', $node_field_values[0])) {
+              $datacite_values['publisher'] = $node_field_values[0]['value'];
+            }
+          }
 	  if ($datacite_element_name == 'creators') {
-            // ...
+            if (array_key_exists('value', $node_field_values[0])) {
+              $datacite_values['creators'] = $node_field_values[0]['value'];
+	    }
           } 
         } 
       } 
     }
-    // devel_debug($datacite_values, 'DataCite values');
     return $datacite_values;
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "mjordan/persistent_identifiers",
-  "description": "Drupal 8 Module that provides a generalized framework for minting and persisting persistent identifiers (DOIs, ARKs, etc.) for Drupal Entities.",
+  "description": "Drupal 8 Module that provides a generalized framework for minting and persisting persistent identifiers (DOIs, ARKs, etc.) for Drupal nodes.",
   "type": "drupal-module",
   "keywords": ["Drupal"],
   "homepage": "https://github.com/mjordan/persistent_identifiers",
