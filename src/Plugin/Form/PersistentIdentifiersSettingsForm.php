@@ -74,7 +74,8 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Target field'),
       '#weight' => 100,
       '#description' => $this->t('Machine name of field where persistent ID should be ' .
-      'stored. You should make sure this field is mapped to "owl:sameAs" in your ' .
+      'stored. All node content types that will be getting persistent identifiers must have this field. ' .
+      'You should make sure this field is mapped to "owl:sameAs" in your ' .
       'Islandora site\'s RDF mappings. See the <a href="@url">docs</a> for more information.',
       ['@url' => 'https://islandora.github.io/documentation/islandora/rdf-mapping/']),
       '#default_value' => $config->get('persistent_identifiers_target_field'),

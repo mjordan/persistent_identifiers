@@ -16,7 +16,9 @@ use Drupal\Core\Url;
 function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   // Inject fields required by this minter into the Persistent Identifier admin form.
   if ($form_id == 'persistent_identifiers_admin_settings') {
+    $pid_config = \Drupal::config('persistent_identifiers.settings');
     $config = \Drupal::config('doi_datacite.settings');
+    
     $form['doi_datacite_api_endpoint'] = [
       '#type' => 'select',
       '#options' => [
@@ -79,47 +81,55 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
         ],
       ],
     ];
-    $form['doi_datacite_field_mappings'] = [
-      '#type' => 'fieldset',
-      '#title' => t('DataCite field mappings'),
-      '#description' => t('Mappings from node fields to DataCite metadata elements.'),
-      '#states' => [
-        'visible' => [
-          ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
-        ],
-      ],
-    ];
 
-    $form['doi_datacite_field_mappings']['doi_datacite_creators_mapping'] = [
-      '#type' => 'textfield',
-      '#title' => t('DataCite creators'),
-      '#default_value' => $config->get('doi_datacite_creators_mapping'),
-      '#states' => [
-        'visible' => [
-          ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
-        ],
-      ],
-    ];
-    $form['doi_datacite_field_mappings']['doi_datacite_publisher_mapping'] = [
-      '#type' => 'textfield',
-      '#title' => t('DataCite publisher'),
-      '#default_value' => $config->get('doi_datacite_publisher_mapping'),
-      '#states' => [
-        'visible' => [
-          ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
-        ],
-      ],
-    ];
-    $form['doi_datacite_field_mappings']['doi_datacite_publicationyear_mapping'] = [
-      '#type' => 'textfield',
-      '#title' => t('DataCite publicationYear'),
-      '#default_value' => $config->get('doi_datacite_publicationyear_mapping'),
-      '#states' => [
-        'visible' => [
-          ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
-        ],
-      ],
-    ];
+    $selected_bundles = $pid_config->get('persistent_identifiers_bundles');
+    foreach ($selected_bundles as &$bundle_id) {
+      if ($bundle_id != '0') {
+        $bundle_id_raw = $bundle_id;
+        $bundle_id = '_' . $bundle_id;
+        $form['doi_datacite_field_mappings' . $bundle_id] = [
+          '#type' => 'fieldset',
+          '#collapsed' => TRUE,
+          '#title' => t('DataCite field mappings for ' . $bundle_id_raw),
+          '#description' => t('Mappings from fields in the "'  . $bundle_id_raw . '" content typ to DataCite metadata elements.'),
+          '#states' => [
+            'visible' => [
+              ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
+            ],
+          ],
+        ];
+        $form['doi_datacite_field_mappings' . $bundle_id]['doi_datacite_creators_mapping' . $bundle_id] = [
+          '#type' => 'textfield',
+          '#title' => t('DataCite creators'),
+          '#default_value' => $config->get('doi_datacite_creators_mapping' . $bundle_id),
+          '#states' => [
+            'visible' => [
+              ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
+            ],
+          ],
+        ];
+        $form['doi_datacite_field_mappings' . $bundle_id]['doi_datacite_publisher_mapping' . $bundle_id] = [
+          '#type' => 'textfield',
+          '#title' => t('DataCite publisher'),
+          '#default_value' => $config->get('doi_datacite_publisher_mapping' . $bundle_id),
+          '#states' => [
+            'visible' => [
+              ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
+            ],
+          ],
+        ];
+        $form['doi_datacite_field_mappings' . $bundle_id]['doi_datacite_publicationyear_mapping' . $bundle_id] = [
+          '#type' => 'textfield',
+          '#title' => t('DataCite publicationYear'),
+          '#default_value' => $config->get('doi_datacite_publicationyear_mapping' . $bundle_id),
+          '#states' => [
+            'visible' => [
+              ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
+            ],
+          ],
+        ];
+      }
+    }
 
     $form['#submit'][] = 'doi_datacite_admin_settings_submit';
   }
@@ -212,26 +222,29 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
 function doi_datacite_admin_settings_submit(array &$form, FormStateInterface $form_state) {
   $minter = Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_minter');
   if ($minter == 'doi_datacite.minter.datacitedois') {
-    $endpoint = trim($form_state->getValue('doi_datacite_api_endpoint'));
     $prefix = trim($form_state->getValue('doi_datacite_prefix'));
     $prefix = rtrim($prefix, '/');
-    $suffix_source = $form_state->getValue('doi_datacite_suffix_source');
-    $username = trim($form_state->getValue('doi_datacite_username'));
-    $password = trim($form_state->getValue('doi_datacite_password'));
-    $creators_source_field = trim($form_state->getValue('doi_datacite_creators_mapping'));
-    $publisher_source_field = trim($form_state->getValue('doi_datacite_publisher_mapping'));
-    $publicationyear_source_field = trim($form_state->getValue('doi_datacite_publicationyear_mapping'));
     $config_factory = \Drupal::configFactory();
     $config_factory->getEditable('doi_datacite.settings')
-      ->set('doi_datacite_api_endpoint', $endpoint)
+      ->set('doi_datacite_api_endpoint', trim($form_state->getValue('doi_datacite_api_endpoint')))
       ->set('doi_datacite_prefix', $prefix)
-      ->set('doi_datacite_suffix_source', $suffix_source)
-      ->set('doi_datacite_username', $username)
-      ->set('doi_datacite_password', $password)
-      ->set('doi_datacite_creators_mapping', $creators_source_field)
-      ->set('doi_datacite_publisher_mapping', $publisher_source_field)
-      ->set('doi_datacite_publicationyear_mapping', $publicationyear_source_field)
+      ->set('doi_datacite_suffix_source', $form_state->getValue('doi_datacite_suffix_source'))
+      ->set('doi_datacite_username', trim($form_state->getValue('doi_datacite_username')))
+      ->set('doi_datacite_password', trim($form_state->getValue('doi_datacite_password')))
       ->save();
+
+    $pid_config = \Drupal::config('persistent_identifiers.settings');
+    $selected_bundles = $pid_config->get('persistent_identifiers_bundles');
+    foreach ($selected_bundles as &$bundle_id) {
+      if ($bundle_id != '0') {
+        $bundle_id = '_' . $bundle_id;
+        $config_factory->getEditable('doi_datacite.settings')
+          ->set('doi_datacite_creators_mapping' . $bundle_id, trim($form_state->getValue('doi_datacite_creators_mapping' . $bundle_id)))
+          ->set('doi_datacite_publisher_mapping' . $bundle_id, trim($form_state->getValue('doi_datacite_publisher_mapping' . $bundle_id)))
+          ->set('doi_datacite_publicationyear_mapping' . $bundle_id, trim($form_state->getValue('doi_datacite_publicationyear_mapping' . $bundle_id)))
+          ->save();
+      }
+    }
   }
 }
 

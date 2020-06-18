@@ -120,6 +120,10 @@ class Dois implements MinterInterface {
     // If $extra is from the node edit form (i.e., it's an instance of
     // Drupal\Core\Form\FormState).
     if (is_object($extra) && method_exists($extra, 'getValue')) {
+
+      //
+      // @todo: get bundle IDs from config, append them to field names.
+      //
       $datacite_array = [];
       $creators = explode(';', $extra->getValue('doi_datacite_creator'));
       $datacite_creators = [];
@@ -151,6 +155,8 @@ class Dois implements MinterInterface {
     }
 
     $datacite_json = json_encode($datacite_array);
+
+    // @todo: Define a hook here so people can write modules to alter the JSON.
 
     $minted_doi = $this->postToApi($entity->id(), $datacite_json);
     return $minted_doi;
