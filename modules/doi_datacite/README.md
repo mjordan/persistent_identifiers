@@ -37,10 +37,6 @@ DataCite requires the use of a controlled vocabulary of resource types. This mod
 
 This list will appear along with other DataCite-specific form elements if the user checks the "Mint DataCite DOI" box. Note that the items selected from this list are not persisted to the node, which means that every time a user mints a new DOI for the node, they must reselect the resource type. This is not optimal, but since DOIs are generally only minted once, not storing this data is preferable to adding a field to the content type of store it in.
 
-## Altering the DataCite Metadata XML
-
-In order to mint a DOI from DataCite, you must provide metadata for the resource using the [DataCite Metadata Schema or the Publication and Citation of Research Data](https://schema.datacite.org/meta/kernel-4.3/doc/DataCite-MetadataKernel_v4.3.pdf) (the schema applies to all resources, not just research data sets). This module comes with a minimalist implementation of that metadata XML. If you want to change or enhance the metadata XML, you can do so using standard Drupal theming techniques.
-
 ## Current maintainer
 
 * [Mark Jordan](https://github.com/mjordan)
