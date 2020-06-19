@@ -43,8 +43,11 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#options' => $options,
       '#default_value' => $config->get('persistent_identifiers_bundles'),
-      '#description' => $this->t('Allow persistent identifier minting for the checked content types.'),
+      '#description' => $this->t('Allow persistent identifier minting for the checked content types. You must save this form before DataCite field mappings for the selected content types appear below.'),
       '#title' => $this->t('Content types'),
+      '#attributes' => [
+        'id' => 'persistent_identifiers_bundles',
+      ],
     ];
 
     $minters = $this->getServices('minter');

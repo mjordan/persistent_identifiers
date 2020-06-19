@@ -179,9 +179,7 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
       $form['doi_datacite_required_fields']['doi_datacite_resource_type'] = [
         '#type' => 'radios',
         '#options' => $resource_type_values,
-        '#title' => t("DataCite resource types"),
-        '#description' => t("Metadata submitted to DataCite requires one of these " .
-	"resource types."),
+        '#title' => t("DataCite resource type"),
         '#label_attributes' => ['class' =>'form-required'],
       ];
       $form['doi_datacite_required_fields']['doi_datacite_creator'] = [
@@ -290,6 +288,22 @@ function doi_datacite_check_for_required_datacite_elements(array $form, FormStat
         if (empty($form_state->getValue('doi_datacite_publisher'))) {
           $form_state->setErrorByName('doi_datacite_publisher', t('You must enter a value in the DataCite Publisher field.'));
 	}
+
+	// If the target field already has a DOI, tell the user.
+        $config = \Drupal::config('doi_datacite.settings');
+	$doi_prefix = $config->get('doi_datacite_prefix');
+        $pid_config = \Drupal::config('persistent_identifiers.settings');
+        $node = $form_state->getFormObject()->getEntity();
+	$doi_field_name = $pid_config->get('persistent_identifiers_target_field');
+        if ($node->hasField($doi_field_name)) {
+          $doi_field_values = $node->get($doi_field_name)->getValue();
+          if (array_key_exists('value', $doi_field_values[0])) {
+            if (preg_match('/' . $doi_prefix . '\//', $doi_field_values[0]['value'])) {
+              $form_state->setErrorByName($doi_field_name, t('This node already has a DOI.'));
+            }
+          }
+	}
+
       }
     }
   }

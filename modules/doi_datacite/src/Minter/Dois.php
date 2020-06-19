@@ -75,7 +75,7 @@ class Dois implements MinterInterface {
    *
    * @return string|NULL;
    *   The DOI that will be saved in the persister's designated field.
-   *   NULL if there was an error POSTing to the API.
+   *   NULL if there was an error (i.e., non-201 response) POSTing to the API.
    */
   public function mint($entity, $extra = NULL) {
     global $base_url;
@@ -86,13 +86,12 @@ class Dois implements MinterInterface {
 
     if ($this->doi_suffix_source == 'id') {
       $suffix = $entity->id();
+      $doi = $this->doi_prefix . '/' . $suffix;
     }
     if ($this->doi_suffix_source == 'uuid') {
       $suffix = $entity->Uuid();
+      $doi = $this->doi_prefix . '/' . $suffix;
     }
-    $doi = $this->doi_prefix . '/' . $suffix;
-
-    $bundle_id = '_' . $entity->bundle();
 
     // If $extra is from the Views Bulk Operations Action
     // (i.e., it's an array).
@@ -123,7 +122,7 @@ class Dois implements MinterInterface {
     // Drupal\Core\Form\FormState).
     if (is_object($extra) && method_exists($extra, 'getValue')) {
       $datacite_array = [];
-      $creators = explode(';', $extra->getValue('doi_datacite_creator' . $bundle_id));
+      $creators = explode(';', $extra->getValue('doi_datacite_creator'));
       $datacite_creators = [];
       foreach ($creators as $creator) {
         $datacite_creators[] = ['name' => trim($creator)]; 
@@ -135,9 +134,9 @@ class Dois implements MinterInterface {
             'event' => 'publish',
             'creators' => $datacite_creators,
             'titles' => $datacite_titles,
-            'publisher' => $extra->getValue('doi_datacite_publisher' . $bundle_id),
-            'publicationYear' => $extra->getValue('doi_datacite_publication_year' . $bundle_id),
-            'types' => ['resourceTypeGeneral' => $extra->getValue('doi_datacite_resource_type' . $bundle_id)],
+            'publisher' => $extra->getValue('doi_datacite_publisher'),
+            'publicationYear' => $extra->getValue('doi_datacite_publication_year'),
+            'types' => ['resourceTypeGeneral' => $extra->getValue('doi_datacite_resource_type')],
             'url' => $base_url . '/node/' . $entity->id(),
             'schemaVersion' => 'http://datacite.org/schema/kernel-4',
       ];
@@ -154,7 +153,8 @@ class Dois implements MinterInterface {
 
     $datacite_json = json_encode($datacite_array);
 
-    // @todo: Define a hook here so people can write modules to alter the JSON.
+    // Define a hook so people can write modules to alter the JSON.
+    \Drupal::moduleHandler()->invokeAll('doi_datacite_json_alter', [$entity, $extra, &$datacite_json]);
 
     $minted_doi = $this->postToApi($entity->id(), $datacite_json);
     return $minted_doi;
@@ -204,14 +204,12 @@ class Dois implements MinterInterface {
         default:
 	  $hint = '';
       }
-
       \Drupal::logger('doi_datacite')->warning(t("While minting DOI for node @nid, the DataCite API returned @code status with the message '@message' @hint", [
         '@nid' => $nid,
         '@code' => $http_code,
         '@message' => $response->getBody()->getContents(),
         '@hint' => $hint,
       ]));
-
       return NULL;
     }
   }
