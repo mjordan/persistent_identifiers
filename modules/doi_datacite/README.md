@@ -50,6 +50,13 @@ Since the default DataCite metadata posted to https://datacite.org/ only contain
 ```php
 /*
  * Implements hook_doi_datacite_json_alter().
+ * @param object $entity
+ *   The node.
+ * @param mixed $extra
+ *   The node edit form state or data from the Views Bulk Operations action.
+ * @param string $datacite_json
+ *   The DataCite JSON. See https://support.datacite.org/docs/api-create-dois
+ *   for more information.
  */
 function my_module_doi_datacite_json_alter($entity, $extra, &$datacite_json) {
   // Do something with the serialized $datacite_json, such as add additional
