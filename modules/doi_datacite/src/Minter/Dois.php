@@ -92,6 +92,8 @@ class Dois implements MinterInterface {
     }
     $doi = $this->doi_prefix . '/' . $suffix;
 
+    $bundle_id = '_' . $entity->bundle();
+
     // If $extra is from the Views Bulk Operations Action
     // (i.e., it's an array).
     if (is_array($extra)) {
@@ -120,12 +122,8 @@ class Dois implements MinterInterface {
     // If $extra is from the node edit form (i.e., it's an instance of
     // Drupal\Core\Form\FormState).
     if (is_object($extra) && method_exists($extra, 'getValue')) {
-
-      //
-      // @todo: get bundle IDs from config, append them to field names.
-      //
       $datacite_array = [];
-      $creators = explode(';', $extra->getValue('doi_datacite_creator'));
+      $creators = explode(';', $extra->getValue('doi_datacite_creator' . $bundle_id));
       $datacite_creators = [];
       foreach ($creators as $creator) {
         $datacite_creators[] = ['name' => trim($creator)]; 
@@ -137,9 +135,9 @@ class Dois implements MinterInterface {
             'event' => 'publish',
             'creators' => $datacite_creators,
             'titles' => $datacite_titles,
-            'publisher' => $extra->getValue('doi_datacite_publisher'),
-            'publicationYear' => $extra->getValue('doi_datacite_publication_year'),
-            'types' => ['resourceTypeGeneral' => $extra->getValue('doi_datacite_resource_type')],
+            'publisher' => $extra->getValue('doi_datacite_publisher' . $bundle_id),
+            'publicationYear' => $extra->getValue('doi_datacite_publication_year' . $bundle_id),
+            'types' => ['resourceTypeGeneral' => $extra->getValue('doi_datacite_resource_type' . $bundle_id)],
             'url' => $base_url . '/node/' . $entity->id(),
             'schemaVersion' => 'http://datacite.org/schema/kernel-4',
       ];

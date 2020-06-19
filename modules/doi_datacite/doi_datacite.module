@@ -18,7 +18,7 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
   if ($form_id == 'persistent_identifiers_admin_settings') {
     $pid_config = \Drupal::config('persistent_identifiers.settings');
     $config = \Drupal::config('doi_datacite.settings');
-    
+
     $form['doi_datacite_api_endpoint'] = [
       '#type' => 'select',
       '#options' => [
@@ -82,6 +82,12 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
       ],
     ];
 
+    $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
+    $bundles = [];
+    foreach ($bundle_info as $id => $details) {
+      $bundles[$id] = $details['label'];
+    }
+
     $selected_bundles = $pid_config->get('persistent_identifiers_bundles');
     foreach ($selected_bundles as &$bundle_id) {
       if ($bundle_id != '0') {
@@ -90,8 +96,8 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
         $form['doi_datacite_field_mappings' . $bundle_id] = [
           '#type' => 'fieldset',
           '#collapsed' => TRUE,
-          '#title' => t('DataCite field mappings for ' . $bundle_id_raw),
-          '#description' => t('Mappings from fields in the "'  . $bundle_id_raw . '" content typ to DataCite metadata elements.'),
+          '#title' => t('DataCite field mappings for ' . $bundles[$bundle_id_raw]),
+          '#description' => t('Mappings from fields in the "'  . $bundles[$bundle_id_raw] . '" content typ to DataCite metadata elements.'),
           '#states' => [
             'visible' => [
               ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],
