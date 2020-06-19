@@ -41,15 +41,16 @@ These DataCite-specific form widgets will appear if the user checks the "Create 
 
 ![DataCite resource types](docs/images/datacite_metadata_mappings.png)
 
-If no values can be derived from these mappings, the form field in the node add/edit form remains empty, and the user will need to enter a suitable value.
+If no values can be derived from these mappings, the form field in the node add/edit form remains empty as illustrated above, and the user will need to enter a suitable value.
  
 ## Altering the metadata that gets submitted to DataCite
 
-Since the default DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements, some repositories may want to submit fuller metadata. This module defines a hook that developers can use to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
+Since the default DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements, some repositories may want to submit fuller metadata. This module defines a hook that developers can use in third-party modules to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
 
 ```php
 /*
  * Implements hook_doi_datacite_json_alter().
+ *
  * @param object $entity
  *   The node.
  * @param mixed $extra
