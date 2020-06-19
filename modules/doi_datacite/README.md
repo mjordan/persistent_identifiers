@@ -31,15 +31,15 @@ The Views Bulk Operations method currently requires that all nodes in the batch 
 
 ## Specifying DataCite resource types
 
-DataCite requires the use of a controlled vocabulary of resource types. This module adds this list to the node edit form, e.g.:
+DataCite requires some metadata elements, including values from a controlled vocabulary of resource types. This module adds these fields to the the node edit form, e.g.:
 
-![DataCite resource types](docs/images/datacite_resource_types.png)
+![DataCite resource types](docs/images/datacite_metadata.png)
 
-This list will appear along with other DataCite-specific form elements if the user checks the "Mint DataCite DOI" box. Note that the items selected from this list are not persisted to the node, which means that every time a user mints a new DOI for the node, they must reselect the resource type. This is not optimal, but since DOIs are generally only minted once, not storing this data is preferable to adding a field to the content type of store it in.
+These DataCite-specific form widgets will appear if the user checks the "Create DataCite DOI" box. Note that these metadata elements are not persisted to the node, they are posted to the DataCite API to provide discovery services at https://datacite.org/.
 
 ## Altering the metadata that gets submitted to DataCite
 
-This module defines a hook that developers can use to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
+Since the DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements, some repositories may want to submit fuller metadata. This module defines a hook that developers can use to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
 
 ```php
 /*
