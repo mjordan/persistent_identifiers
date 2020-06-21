@@ -34,7 +34,7 @@ For production use, you will need access to an API for minting persistent identi
 
 ## Configuration
 
-1. Visit `/admin/config/persistent_identifiers/settings` for options.
+1. Visit `/admin/config/persistent_identifiers/settings` for options. Specific configuration options will vary depending on which Minter you select. See the README file for each Minter for more information.
 1. Assign the "Mint persistent identifiers" permission to desired roles.
 
 ## Usage

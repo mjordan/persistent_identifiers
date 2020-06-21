@@ -45,7 +45,7 @@ If no values can be derived from these mappings, the form field in the node add/
  
 ## Altering the metadata that gets submitted to DataCite
 
-Since the default DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements, some repositories may want to submit fuller metadata. This module defines a hook that developers can use in third-party modules to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
+Since the default DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements (title, creators, publication year, publisher, and DataCite resource type), some repositories may want to submit fuller metadata. This module defines a hook that developers can use in third-party modules to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
 
 ```php
 /*
