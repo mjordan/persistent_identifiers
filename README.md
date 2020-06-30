@@ -39,7 +39,7 @@ This module and its bundled submodules are Drupal 9 ready.
 1. Assign the "Mint persistent identifiers" permission to desired roles.
 1. Visit `/admin/config/persistent_identifiers/settings` for options. Specific configuration options will vary depending on which Minter you select. See the README file for each Minter for more information.
 
-The option exists to add the persistent identifier to the JSON-LD for a node, mapped to schema:sameAs. If this is option is checked, and the resolver base URL 'https://example.com/ids' is configured, the JSON-LD will look like this if the persistent identifier is '10.80484/eb7f-x968':
+The option exists to add the persistent identifier to the JSON-LD for a node, mapped to schema:sameAs. If this is option is checked, and the resolver base URL "https://example.com/ids" is configured, the JSON-LD will look like this if the persistent identifier is "10.80484/eb7f-x968":
 
 ```
 "http:\/\/schema.org\/sameAs":[
@@ -70,7 +70,7 @@ Bug reports, improvements, feature requests, and PRs (especially for new minters
 
 ### Writing minters
 
-At a minimum, a minter module contains a services that "mints" (creates) the persistent identifier that mints the identifier. In its `.services.yml' file, the service must be registered using the ID pattern `foo.minter.sample`, where `foo` is the module's namespace and `sample` is unique to the minter. `minter` is a literal string. If the minter requires admin settings, the module should also include an implementation of `hook_form_alter()` that adds minter-specific settings to the admin form at `/admin/config/persistent_identifiers/settings`, and also adds minter-specific UI elements and validation to the node add/edit form.
+At a minimum, a minter module contains a services that "mints" (creates) the persistent identifier that mints the identifier. In its `.services.yml` file, the service must be registered using the ID pattern `foo.minter.sample`, where `foo` is the module's namespace and `sample` is unique to the minter. `minter` is a literal string. If the minter requires admin settings, the module should also include an implementation of `hook_form_alter()` that adds minter-specific settings to the admin form at `/admin/config/persistent_identifiers/settings`, and also adds minter-specific UI elements and validation to the node add/edit form.
 
 The service class is implemented in the module's `src/Minter` directory, and implements `MinterInterface`. The persistent identifier is generated within and returned by the class's `mint()` method. See the source code in `modules/sample_minter` for more detail.
 
