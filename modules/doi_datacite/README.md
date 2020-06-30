@@ -27,23 +27,37 @@ Two ways:
 1. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit form will see a checkbox with the help text "Create DataCite DOI". Checking it will reveal a form with some DataCite-specific metadata fields they need to complete. Saving the node with this box checked will mint a DOI for the node and persist it to the field configured in the module's admin settings.
 1. Via Views Bulk Operations.
 
-The Views Bulk Operations method currently requires that all nodes in the batch have the same creator(s), publisher, publication year, and DataCite resource type.
+The Views Bulk Operations method currently requires that all nodes in the batch have the same creator(s), publisher, publication year, and DataCite resource type, applied using a form during the batch operation.
 
-## Specifying DataCite resource types
+## DataCite-specific metadata
 
-DataCite requires some metadata elements, including values from a controlled vocabulary of resource types. This module adds these fields to the the node edit form, e.g.:
+Minting DOIs via DataCite requires that repositories register metadata that is used to provide discovery services at https://datacite.org/. The required elments are title, creator, publication year, publisher, and resource type. Resource type is taken from DataCite's own vocabulary.
 
-![DataCite resource types](docs/images/datacite_metadata.png)
+To ensure that requests to mint DOIs have these required metadata elements, this module inject the following fields into the node add/edit form:
 
-These DataCite-specific form widgets will appear if the user checks the "Create DataCite DOI" box. Note that these metadata elements are not persisted to the node, they are posted to the DataCite API to provide discovery services at https://datacite.org/.
+![DataCite metadata fields](docs/images/datacite_metadata.png)
 
+These DataCite-specific form widgets will appear if the user checks the "Create DataCite DOI" box. Note that these metadata elements are not persisted to the node, they are posted to the DataCite API to provide discovery services at https://datacite.org/. This module will attempt to derive values for these form fields from the node, using per-content-type mappings configured in the module's admin settings. Each node content type that has DOI minting enabled will have a set of options like this at `admin/config/persistent_identifiers/settings`:
+
+![DataCite resource types](docs/images/datacite_metadata_mappings.png)
+
+If no values can be derived from these mappings, the form field in the node add/edit form remains empty as illustrated above, and the user will need to enter a suitable value.
+ 
 ## Altering the metadata that gets submitted to DataCite
 
-Since the DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements, some repositories may want to submit fuller metadata. This module defines a hook that developers can use to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
+Since the default DataCite metadata posted to https://datacite.org/ only contains DataCite's requiered elements (title, creators, publication year, publisher, and DataCite resource type), some repositories may want to submit fuller metadata. This module defines a hook that developers can use in third-party modules to alter the JSON that gets POSTed to DataCite as part of the DOI minting process.
 
 ```php
 /*
  * Implements hook_doi_datacite_json_alter().
+ *
+ * @param object $entity
+ *   The node.
+ * @param mixed $extra
+ *   The node edit form state or data from the Views Bulk Operations action.
+ * @param string $datacite_json
+ *   The DataCite JSON. See https://support.datacite.org/docs/api-create-dois
+ *   for more information.
  */
 function my_module_doi_datacite_json_alter($entity, $extra, &$datacite_json) {
   // Do something with the serialized $datacite_json, such as add additional

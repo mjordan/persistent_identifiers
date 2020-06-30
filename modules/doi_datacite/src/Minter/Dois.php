@@ -69,7 +69,7 @@ class Dois implements MinterInterface {
    * Mints the identifier.
    *
    * @param object $entity
-   *   The node, etc.
+   *   The node.
    * @param mixed $extra
    *   The node edit form state or data from the Views Bulk Operations action.
    *
