@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Drupal 8 Module for minting and persisting persistent identifiers (Handles, DOIs, ARKs, etc.) for nodes.
+Drupal 8/9 Module for minting and persisting persistent identifiers (Handles, DOIs, ARKs, etc.) for nodes.
 
 This module's primary use case was to provide this service for [Islandora](https://islandora.ca/) objects, but it can be used without Islandora. Preliminary discussion that lead to this module can be found at https://github.com/Islandora/documentation/issues/1042 and https://github.com/Islandora/documentation/issues/1256.
 
@@ -25,6 +25,8 @@ The following Persisters are available:
 Drupal 8. This module is not specific to Islandora.
 
 For production use, you will need access to an API for minting persistent identifiers (e.g., [DataCite](https://datacite.org/), [EZID](https://ezid.cdlib.org/), etc.).
+
+This module and its bundled submodules are Drupal 9 ready.
 
 ## Installation
 
