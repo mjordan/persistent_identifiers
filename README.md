@@ -34,8 +34,21 @@ For production use, you will need access to an API for minting persistent identi
 
 ## Configuration
 
-1. Visit `/admin/config/persistent_identifiers/settings` for options.
 1. Assign the "Mint persistent identifiers" permission to desired roles.
+1. Visit `/admin/config/persistent_identifiers/settings` for options.
+
+The option exists to add the persistent identifier to the JSON-LD for a node, mapped to schema:sameAs. If this is option is checked, and the resolver base URL 'https://example.com/ids' is configured, the JSON-LD will look like this if the persistent identifier is '10.80484/eb7f-x968':
+
+```
+"http:\/\/schema.org\/sameAs":[
+   {
+      "@id":"http:\/\/localhost:8000\/node\/1"
+   },
+   {
+      "@id":"https:\/\/example.com\/ids\/10.80484\/eb7f-x968"
+   }
+]
+```
 
 ## Usage
 

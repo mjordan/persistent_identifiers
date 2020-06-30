@@ -66,7 +66,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Persister'),
       '#default_value' => $config->get('persistent_identifiers_persister'),
       '#options' => $persisters,
-      '#weight' => 100,
+      '#weight' => 99,
       '#attributes' => [
         'id' => 'persistent_identifiers_persister',
       ],
@@ -75,13 +75,36 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#maxlength' => 256,
       '#title' => $this->t('Target field'),
-      '#weight' => 100,
+      '#weight' => 99,
       '#description' => $this->t('Machine name of field where persistent ID should be ' .
       'stored. All node content types that will be getting persistent identifiers must have this field. ' .
       'You should make sure this field is mapped to "owl:sameAs" in your ' .
       'Islandora site\'s RDF mappings. See the <a href="@url">docs</a> for more information.',
       ['@url' => 'https://islandora.github.io/documentation/islandora/rdf-mapping/']),
       '#default_value' => $config->get('persistent_identifiers_target_field'),
+    ];
+    $form['persistent_identifiers_map_to_schema_sameas'] = [
+      '#weight' => 100,
+      '#type' => 'checkbox',
+      '#default_value' => $config->get('persistent_identifiers_map_to_schema_sameas'),
+      '#description' => $this->t("Add the persistent identifier to the node's JSON-LD as schema:sameAs, prepending the URL configured below. If the field is multivalued, uses the first value."),
+      '#title' => $this->t('Map to schema:sameAs in JSON-LD'),
+      '#attributes' => [
+        'id' => 'persistent_identifiers_map_to_schema_sameas',
+      ],
+    ];
+    $form['persistent_identifiers_resolver_base_url'] = [
+      '#type' => 'textfield',
+      '#maxlength' => 256,
+      '#title' => $this->t('Resolver base URL'),
+      '#weight' => 100,
+      '#description' => $this->t('URL to prepend to the persistent identifier. Leave empty to not prepend anything'),
+      '#default_value' => $config->get('persistent_identifiers_resolver_base_url'),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_map_to_schema_sameas"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
 
@@ -97,6 +120,8 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       ->set('persistent_identifiers_persister', $form_state->getValue('persistent_identifiers_persister'))
       ->set('persistent_identifiers_target_field', trim($form_state->getValue('persistent_identifiers_target_field')))
       ->set('persistent_identifiers_bundles', array_values($form_state->getValue('persistent_identifiers_bundles')))
+      ->set('persistent_identifiers_map_to_schema_sameas', $form_state->getValue('persistent_identifiers_map_to_schema_sameas'))
+      ->set('persistent_identifiers_resolver_base_url', $form_state->getValue('persistent_identifiers_resolver_base_url'))
       ->save();
 
     parent::submitForm($form, $form_state);
