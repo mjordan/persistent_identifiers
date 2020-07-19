@@ -97,7 +97,7 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
           '#type' => 'fieldset',
           '#collapsed' => TRUE,
           '#title' => t('DataCite field mappings for ' . $bundles[$bundle_id_raw]),
-          '#description' => t('Mappings from fields in the "'  . $bundles[$bundle_id_raw] . '" content typ to DataCite metadata elements.'),
+          '#description' => t('Mappings from fields in the "'  . $bundles[$bundle_id_raw] . '" content type to DataCite metadata elements.'),
           '#states' => [
             'visible' => [
               ':input[id="persistent_identifiers_minter"]' => ['value' => 'doi_datacite.minter.datacitedois'],

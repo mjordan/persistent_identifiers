@@ -77,9 +77,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Target field'),
       '#weight' => 99,
       '#description' => $this->t('Machine name of field where persistent ID should be ' .
-      'stored. All node content types that will be getting persistent identifiers must have this field. ' .
-      'See the <a href="@url">docs</a> for more information.',
-      ['@url' => 'https://islandora.github.io/documentation/islandora/rdf-mapping/']),
+      'stored. All node content types that will be getting persistent identifiers must have this field.'),
       '#default_value' => $config->get('persistent_identifiers_target_field'),
     ];
     $form['persistent_identifiers_map_to_schema_sameas'] = [
@@ -97,7 +95,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#maxlength' => 256,
       '#title' => $this->t('Resolver base URL'),
       '#weight' => 100,
-      '#description' => $this->t('URL to prepend to the persistent identifier. Leave empty to not prepend anything'),
+      '#description' => $this->t('URL to prepend to the persistent identifier. Leave empty to not prepend anything.'),
       '#default_value' => $config->get('persistent_identifiers_resolver_base_url'),
       '#states' => [
         'visible' => [
