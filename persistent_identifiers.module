@@ -58,19 +58,22 @@ function persistent_identifiers_mint_from_form(array &$form, FormStateInterface 
   if ($mint_and_persist && $entity->getEntityTypeId() == 'node' && in_array($content_type, $allowed_types, TRUE)) {
     $minter = \Drupal::service($config->get('persistent_identifiers_minter'));
     $pid = $minter->mint($entity, $form_state);
+    if ($pid == FALSE) {
+      return;
+    }
     if (is_null($pid)) {
-      \Drupal::logger('persistent_identifiers')->warning(t("Persistent identifier not created for node @nid.", ['@nid' => $entity->id()]));
-      \Drupal::messenger()->addWarning(t("Problem creating persistent identifier for this node. Details are available in the Drupal system log."));
+      \Drupal::logger('persistent_identifiers')->warning(t("@minter_name not created for node @nid.", ['@minter_name' => $minter->getName(), '@nid' => $entity->id()]));
+      \Drupal::messenger()->addWarning(t("Problem creating @minter_name for this node. Details are available in the Drupal system log.", ['@minter_name' => $minter->getName()]));
       return;
     }
     $persister = \Drupal::service($config->get('persistent_identifiers_persister'));
     if ($persister->persist($entity, $pid)) {
-      \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid created for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));
-      \Drupal::messenger()->addStatus(t("Persistent identifier %pid created for this node.", ['%pid' => $pid]));
+      \Drupal::logger('persistent_identifiers')->info(t("@minter_name %pid created for node @nid.", ['@minter_name' => $minter->getName(), '%pid' => $pid, '@nid' => $entity->id()]));
+      \Drupal::messenger()->addStatus(t("@minter_name %pid created for this node.", ['@minter_name' => $minter->getName(), '%pid' => $pid]));
     }
     else {
-      \Drupal::logger('persistent_identifiers')->warning(t("Persistent identifier not created for node @nid.", ['@nid' => $entity->id()]));
-      \Drupal::messenger()->addWarning(t("Problem creating persistent identifier for this node. Details are available in the Drupal system log."));
+      \Drupal::logger('persistent_identifiers')->warning(t("@minter_name not created for node @nid.", ['@minter_name' => $minter->getName(), '@nid' => $entity->id()]));
+      \Drupal::messenger()->addWarning(t("Problem creating @minter_name for this node. Details are available in the Drupal system log.", ['@minter_name' => $minter->getName()]));
     }
   }
 }

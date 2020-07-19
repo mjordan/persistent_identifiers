@@ -55,7 +55,7 @@ class DoiDataciteMintDoi extends ContextReactionPluginBase {
     }
     
     $minter = \Drupal::service('doi_datacite.minter.datacitedois');
-
+/*
     // If any of the required metadata fields are empty, log and return.
     $datacite_metadata_values = $minter->getDataCiteElementValues($node);
     $missing_properties = [];
@@ -69,11 +69,12 @@ class DoiDataciteMintDoi extends ContextReactionPluginBase {
       \Drupal::logger('doi_datacite')->info(t("Cannot mint DOI for node \"@title\" (UUID @uuid) due to missing required metadata propert(ies) @keys.", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid(), '@keys' => $keys]));
       return;
     }
+*/
 
-    // $persister = \Drupal::service($module_config->get('persistent_identifiers_persister'));
-    // $identifier = $minter->mint($entity);
-    // $persister->persist($entity, $identifier, FALSE);
-    // This context is fired in presave, so there is no entity ID to log.
+    $persister = \Drupal::service($pid_config->get('persistent_identifiers_persister'));
+    $doi = $minter->mint($entity);
+    $persister->persist($entity, $doi, FALSE);
+    // Contexts using this reaction are fired in hook_presave, so there is no entity ID to log.
     \Drupal::logger('doi_datacite')->info(t("DOI %pid minted for \"@title\" (UUID @uuid) via Context Reaction.", ['%pid' => $pid, '@title' => $entity->get('title')->value, '@uuid' => $entity->uuid()]));
   }
 
@@ -87,7 +88,7 @@ class DoiDataciteMintDoi extends ContextReactionPluginBase {
     $resource_type_values = $minter->getResourceTypes();
 
     $form['required_note'] = [
-      '#markup' => t('If a node has a field that maps to the following required DataCite metadata elements, its value will be used. If it doesn\'t the value below will be used.'),
+      '#markup' => t('If a node has a field that maps to the following required DataCite metadata elements, its value will be used. If it doesn\'t the value below will be used. Note that if this Reaction is executed, the DOI it creates is used instead of the DOI created in the node add/edit form.'),
     ];
     $form['doi_datacite_resource_type'] = [
       '#type' => 'radios',

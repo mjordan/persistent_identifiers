@@ -32,8 +32,9 @@ interface MinterInterface {
    * @param mixed $extra
    *   Extra data the minter needs, for example from the node edit form state.
    *
-   * @return string|null
-   *   The identifier or NULL if it is not available/failed/etc.
+   * @return string|bool|null
+   *   The identifier or NULL if it is not available/failed/etc. Return FALSE
+   *   if minting should not happen.
    */
   public function mint($entity, $extra = NULL);
 

@@ -50,12 +50,14 @@ class Generic implements PersisterInterface {
       $entity->{$target_field}[] = $pid;
     }
     else {
-        \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));
+      \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));
+      return FALSE;
     }
     if ($save) {
-      $entity->save();
+      if ($entity->save()) {
+        return TRUE;
+      }
     }
-    return TRUE;
   }
 
 }

@@ -73,15 +73,41 @@ class Dois implements MinterInterface {
    * @param mixed $extra
    *   The node edit form state or data from the Views Bulk Operations action.
    *
-   * @return string|NULL;
+   * @return string|bool|NULL;
    *   The DOI that will be saved in the persister's designated field.
-   *   NULL if there was an error (i.e., non-201 response) POSTing to the API.
+   *   NULL if there was an error (i.e., non-201 response) POSTing to the API
+   *   or some other requirement was not met. Return FALSE to signify that
+   *   minting should not happen.
    */
   public function mint($entity, $extra = NULL) {
+    // We only want to execute mint() once per node (e.g., if there's
+    // a Context Reaction in addtion to the user doing it via the
+    // node form).
+    static $node_seen = FALSE;
+    if ($node_seen) {
+      return FALSE;
+    }
+    $node_seen = TRUE;
+
     global $base_url;
     // This minter needs $extra.
     if (is_null($extra)) {
       return NULL;
+    }
+
+    //  Check for the existence of a DOI. If present, log and return.
+    $config = \Drupal::config('doi_datacite.settings');
+    $doi_prefix = $config->get('doi_datacite_prefix');
+    $pid_config = \Drupal::config('persistent_identifiers.settings');
+    $doi_field_name = $pid_config->get('persistent_identifiers_target_field');
+    if ($entity->hasField($doi_field_name)) {
+      $doi_field_values = $entity->get($doi_field_name)->getValue();
+      if (array_key_exists('value', $doi_field_values[0])) {
+        if (preg_match('/' . $doi_prefix . '\//', $doi_field_values[0]['value'])) {
+          // \Drupal::logger('doi_datacite')->info(t("Node \"@title\" (UUID @uuid) already has a DOI (@doi), Context Reaction not adding one.", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid(), '@doi' => $doi_field_values[0]['value']]));
+          return NULL;
+        }
+      }
     }
 
     if ($this->doi_suffix_source == 'id') {
@@ -94,7 +120,7 @@ class Dois implements MinterInterface {
     }
 
     // If $extra is from the Views Bulk Operations Action
-    // (i.e., it's an array).
+    // or a Context Reaction (i.e., it's an array).
     if (is_array($extra)) {
       $datacite_array = [];
       $creators = explode(';', $extra['doi_datacite_creator']);
