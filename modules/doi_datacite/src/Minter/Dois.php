@@ -217,14 +217,14 @@ class Dois implements MinterInterface {
   /**
    * Attempts to prepopulate DataCite-specific metadata fields.
    *
-   * @param int $nid
-   *   The node ID.
+   * @param object $node
+   *   The node Entity object.
    *
    * @return array
    *   An associative array of metadata values that can be gotten from
    *   existing node fields, to provide default values for the required DataCite metadata.
    */
-  public function getDataCiteElementValues($nid) {
+  public function getDataCiteElementValues($node) {
     $config = \Drupal::config('doi_datacite.settings');
     $mappings = preg_split("/\\r\\n|\\r|\\n/", $config->get('doi_datacite_field_mappings'));
     $datacite_values = [
@@ -233,11 +233,10 @@ class Dois implements MinterInterface {
       'publisher' => '',
     ];
 
-    if (empty($nid)) {
+    if (empty($node)) {
       return $datacite_values;
     }
 
-    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
     // Creators.
     $creators_field_name = $config->get('doi_datacite_creators_mapping');
     if ($node->hasField($creators_field_name)) {

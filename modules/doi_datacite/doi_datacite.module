@@ -6,9 +6,25 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function doi_datacite_node_presave(EntityInterface $entity) {
+  $module_handler = \Drupal::service('module_handler');
+  // Only fire on node add, not also on node update.
+  if ($module_handler->moduleExists('context') && empty($entity->original)) {
+    $context_manager = \Drupal::service('context.manager');
+    $reactions = $context_manager->getActiveReactions('datacite_doi_mint_doi');
+    foreach ($reactions as $reaction) {
+      $reaction->execute($entity);
+    }
+  }
+}
 
 /**
  * Implements hook_form_alter().
@@ -159,7 +175,8 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
     $minter_id = Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_minter');
     if ($minter_id == 'doi_datacite.minter.datacitedois') {
       $minter_service = \Drupal::service('doi_datacite.minter.datacitedois');
-      $datacite_metadata_values = $minter_service->getDataCiteElementValues($entity->id());
+      // $node = \Drupal::entityTypeManager()->getStorage('node')->load($entity->id());
+      $datacite_metadata_values = $minter_service->getDataCiteElementValues($entity);
       // DataCite requires the use of this following controlled list of resource types.
       $resource_type_values = $minter_service->getResourceTypes();
       // Only show this form element if the user checks the "Mint DataCite DOI" box.
