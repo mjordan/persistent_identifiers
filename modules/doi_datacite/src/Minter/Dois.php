@@ -83,15 +83,15 @@ class Dois implements MinterInterface {
     // We only want to execute mint() once per node (e.g., if there's
     // a Context Reaction in addtion to the user doing it via the
     // node form).
-    static $node_seen = FALSE;
-    if ($node_seen) {
+    static $seen_nodes = [];
+    if (in_array($entity->uuid(), $seen_nodes)) {
       return FALSE;
     }
-    $node_seen = TRUE;
+    $seen_nodes[] = $entity->uuid();
 
-    global $base_url;
     // This minter needs $extra.
     if (is_null($extra)) {
+      \Drupal::logger('doi_datacite')->info(t("'Extra' information is required to mint a DOI for node \"@title\" (UUID @uuid).", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid()]));
       return NULL;
     }
 
@@ -104,8 +104,8 @@ class Dois implements MinterInterface {
       $doi_field_values = $entity->get($doi_field_name)->getValue();
       if (array_key_exists('value', $doi_field_values[0])) {
         if (preg_match('/' . $doi_prefix . '\//', $doi_field_values[0]['value'])) {
-          // \Drupal::logger('doi_datacite')->info(t("Node \"@title\" (UUID @uuid) already has a DOI (@doi), Context Reaction not adding one.", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid(), '@doi' => $doi_field_values[0]['value']]));
-          return NULL;
+          \Drupal::logger('doi_datacite')->info(t("Node \"@title\" (UUID @uuid) already has a DOI (@doi), Minter is not adding another one.", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid(), '@doi' => $doi_field_values[0]['value']]));
+          return FALSE;
         }
       }
     }
@@ -119,6 +119,7 @@ class Dois implements MinterInterface {
       $doi = $this->doi_prefix . '/' . $suffix;
     }
 
+    global $base_url;
     // If $extra is from the Views Bulk Operations Action
     // or a Context Reaction (i.e., it's an array).
     if (is_array($extra)) {
