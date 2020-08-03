@@ -55,9 +55,14 @@ class DoiDataciteMintDoi extends ContextReactionPluginBase {
     }
     
     $minter = \Drupal::service('doi_datacite.minter.datacitedois');
-/*
-    // If any of the required metadata fields are empty, log and return.
     $datacite_metadata_values = $minter->getDataCiteElementValues($node);
+
+    // @todo: merge values from $datacite_metadata_values with those from this reaction's
+    // config by looking for empty members of $datacite_metadata_values and populate them
+    // with values from the config. The minter will check for completeness and skip if
+    // values are missing.
+
+    // If any of the required metadata fields are empty, log and return.
     $missing_properties = [];
     foreach ($datacite_metadata_values as $key => $value) {
       if (strlen($value) == 0) {
@@ -69,10 +74,9 @@ class DoiDataciteMintDoi extends ContextReactionPluginBase {
       \Drupal::logger('doi_datacite')->info(t("Cannot mint DOI for node \"@title\" (UUID @uuid) due to missing required metadata propert(ies) @keys.", ['@title' => $entity->get('title')->value, '@uuid' => $entity->uuid(), '@keys' => $keys]));
       return;
     }
-*/
 
     $persister = \Drupal::service($pid_config->get('persistent_identifiers_persister'));
-    $doi = $minter->mint($entity);
+    $doi = $minter->mint($entity, $datacite_metadata_values);
     $persister->persist($entity, $doi, FALSE);
     // Contexts using this reaction are fired in hook_presave, so there is no entity ID to log.
     \Drupal::logger('doi_datacite')->info(t("DOI %pid minted for \"@title\" (UUID @uuid) via Context Reaction.", ['%pid' => $pid, '@title' => $entity->get('title')->value, '@uuid' => $entity->uuid()]));

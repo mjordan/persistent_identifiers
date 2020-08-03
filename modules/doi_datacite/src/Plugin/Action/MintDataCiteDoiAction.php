@@ -25,6 +25,13 @@ class MintDataCiteDoiAction extends ViewsBulkOperationsActionBase implements Vie
    */
   public function execute($entity = NULL) {
     $minter = \Drupal::service('doi_datacite.minter.datacitedois');
+    $datacite_metadata_values = $minter->getDataCiteElementValues($entity);
+
+    // @todo: merge values from $datacite_metadata_values with those from this reaction's
+    // config by looking for empty members of $datacite_metadata_values and populate them
+    // with values from the config. If some are still missing, skip and log. The minter will
+    // check for completeness and skip if values are missing.
+
     $persister_id = \Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_persister');
     $persister = \Drupal::service($persister_id);
     // The values saved in this action's configuration form are in $this->configuration.

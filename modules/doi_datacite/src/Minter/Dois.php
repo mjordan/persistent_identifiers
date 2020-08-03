@@ -122,6 +122,10 @@ class Dois implements MinterInterface {
     global $base_url;
     // If $extra is from the Views Bulk Operations Action
     // or a Context Reaction (i.e., it's an array).
+    //
+    // At this point, $extra should have all the required metadata elements,
+    // either from the node itself or from the Action or Reaction config.
+    // @todo: check for missing required values and if any found, log details and return NULL.
     if (is_array($extra)) {
       $datacite_array = [];
       $creators = explode(';', $extra['doi_datacite_creator']);
@@ -285,7 +289,9 @@ class Dois implements MinterInterface {
     if ($node->hasField($publication_year_field_name)) {
       $node_publication_year_field_values = $node->get($publication_year_field_name)->getValue();
       if (array_key_exists('value', $node_publication_year_field_values[0])) {
-        $datacite_values['publicationYear'] = $node_publication_year_field_values[0]['value'];
+        if (preg_match('/\d\d\d\d/', $node_publication_year_field_values[0]['value'], $matches)) {
+          $datacite_values['publicationYear'] = $matches[0];
+        }
       }
     }
 

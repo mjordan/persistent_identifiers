@@ -175,7 +175,6 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
     $minter_id = Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_minter');
     if ($minter_id == 'doi_datacite.minter.datacitedois') {
       $minter_service = \Drupal::service('doi_datacite.minter.datacitedois');
-      // $node = \Drupal::entityTypeManager()->getStorage('node')->load($entity->id());
       $datacite_metadata_values = $minter_service->getDataCiteElementValues($entity);
       // DataCite requires the use of this following controlled list of resource types.
       $resource_type_values = $minter_service->getResourceTypes();
