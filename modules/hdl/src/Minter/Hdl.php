@@ -50,7 +50,13 @@ class Hdl implements MinterInterface {
   public function mint($entity, $extra = NULL) {
     $config = \Drupal::config('hdl.settings');
     $handle_prefix = $config->get('hdl_prefix');
-    $handle_type_qualifier = $config->get('hdl_qualifier');
+
+    if (array_key_exists('hdl_qualifier', $extra)) {
+      $handle_type_qualifier = $extra['hdl_qualifier'];
+    }
+    else {
+      $handle_type_qualifier = $config->get('hdl_qualifier');
+    }
     $handle = $handle_prefix . '/' . $handle_type_qualifier . '.' . $entity->id();
     $host = \Drupal::request()->getSchemeAndHttpHost();
     $url = $host . $entity->toUrl()->toString();
