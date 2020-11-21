@@ -96,7 +96,7 @@ class Hdl implements MinterInterface {
       \Drupal::logger('persistent identifiers')->error(print_r($e, TRUE));
       return FALSE;
     }
-    $full_handle = "https://handle.net/" . $handle;
+    $full_handle = "https://hdl.handle.net/" . $handle;
     return $full_handle;
   }
 
