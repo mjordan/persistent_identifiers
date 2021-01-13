@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: ezid_mint_ark
+label: 'Mint ARK with EZID'
+type: node
+plugin: ezid_mint_ark
+configuration: {  }

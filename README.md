@@ -15,6 +15,7 @@ Currently, the following Minters are available:
 
 * [Handle](modules/hdl) (contributed by [@elizoller](https://github.com/elizoller))
 * [DataCite DOI Minter](modules/doi_datacite/README.md)
+* [EZID ARKs](modules/ezid) (contributed by [@seth-shaw-unlv](https://github.com/seth-shaw-unlv))
 
 The following Persisters are available:
 
