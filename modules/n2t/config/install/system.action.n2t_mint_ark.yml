@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: n2t_mint_ark
+label: 'Mint ARK with N2T'
+type: node
+plugin: n2t_mint_ark
+configuration: {  }

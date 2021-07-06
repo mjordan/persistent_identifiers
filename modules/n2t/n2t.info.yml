@@ -1,0 +1,7 @@
+name: 'N2T (ARK) Persistent ID Minter'
+description: "A minter accompanying the Persistent Identifers module for minting ARKs using the N2T (Names to Things) service."
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+ - persistent_identifiers

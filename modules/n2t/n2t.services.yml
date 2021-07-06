@@ -1,0 +1,5 @@
+services:
+  # The list of minters at /admin/config/persistent_identifiers/settings is derived
+  # from minters that follow this naming pattern.
+  n2t.minter.n2t:
+    class: Drupal\n2t\Minter\N2t

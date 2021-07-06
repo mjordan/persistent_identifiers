@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ * Contains the n2t.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function n2t_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if ($form_id == 'persistent_identifiers_admin_settings') {
+    $config = \Drupal::config('n2t.settings');
+    $form['n2t_user'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'N2T username',
+      '#default_value' => $config->get('n2t_user'),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
+    $form['n2t_password'] = [
+      '#type' => 'textfield',
+      '#title' => 'N2T password',
+      '#default_value' => $config->get('n2t_password'),
+      '#description' => t("The password used to authenticate for the N2T API."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
+    $form['n2t_api_endpoint'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'N2T API endpoint',
+      '#default_value' => $config->get('n2t_api_endpoint'),
+      '#description' => t("Full URL to the N2T API endpoint."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
+    $form['n2t_shoulder'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Namespace and shoulder',
+      '#default_value' => $config->get('n2t_shoulder'),
+      '#description' => t("The NAAN namespace and shoulder (joined by a /) used for minting ARKs. E.g. '99999/fq3'. You must get this from N2T."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
+    $form['#submit'][] = 'n2t_submit';
+  }
+}
+
+/**
+ * Submit callback.
+ *
+ * Saves the value of the minter-specific field defined in the implementation
+ * of hook_form_alter() above.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function n2t_submit(array &$form, FormStateInterface $form_state) {
+  $existing_config = \Drupal::config('n2t.settings');
+  $n2t_user = $form_state->getValue('n2t_user', $existing_config->get('n2t_user'));
+  $n2t_password = $form_state->getValue('n2t_password', $existing_config->get('n2t_password'));
+
+  $n2t_api_endpoint = $form_state->getValue('n2t_api_endpoint', $existing_config->get('n2t_api_endpoint'));
+  $n2t_shoulder = $form_state->getValue('n2t_shoulder', $existing_config->get('n2t_shoulder'));
+
+  // Save password in Drupal state.
+  $state = \Drupal::state();
+  if (!empty($form_state->getValue('n2t_password'))) {
+    $state->set('n2t.password', $form_state->getValue('n2t_password'));
+  }
+
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('n2t.settings')
+    ->set('n2t_user', trim($n2t_user))
+    ->set('n2t_password', trim($n2t_password))
+    ->set('n2t_api_endpoint', trim($n2t_api_endpoint))
+    ->set('n2t_shoulder', trim($n2t_shoulder))
+    ->save();
+}
