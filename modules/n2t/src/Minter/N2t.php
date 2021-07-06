@@ -76,8 +76,7 @@ class N2t implements MinterInterface {
 
     // Then we bind it to the current node.
     $node_host = \Drupal::request()->getSchemeAndHttpHost();
-    // $node_url = $node_host . $entity->toUrl()->toString();
-    $node_url = 'https://www.lib.sfu.ca/about/branches-depts/rc';
+    $node_url = $node_host . $entity->toUrl()->toString();
     $binding_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/b?ark:/' . $ark . '.set%20_t%20' . urlencode($node_url);
     $client = \Drupal::httpClient();
     try {
@@ -87,12 +86,12 @@ class N2t implements MinterInterface {
 	['auth' => [$n2t_user, $n2t_password]]
       );
       $response_message = (string) $request->getBody();
-      if (preg_match('/^egg-status: 0\n/', $response_message)) {
+      if ($request->getStatusCode() == 200 & preg_match('/^egg-status: 0\n/', $response_message)) {
         $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
         return $ret;
       }
       else {
-        \Drupal::logger('persistent identifiers')->error('Could not bind ARK; ARK resolver response: ' . $response_message);
+        \Drupal::logger('persistent identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $response->getStatusCode() . ': ' . $response_message);
         return NULL;
       }
     }
