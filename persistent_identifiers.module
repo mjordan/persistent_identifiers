@@ -100,6 +100,7 @@ function persistent_identifiers_jsonld_alter_normalized_array(EntityInterface $e
         $normalized['@graph'] = [$normalized['@graph']];
       }
       $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
+	// @todo: This should replace the hostname in the PID ith the value of the form element, not prepend it.
         '@id'  => $resolver_base_url . $pid,
       ];
     }

@@ -52,6 +52,7 @@ class N2t implements MinterInterface {
     $n2t_password = $config->get('n2t_password');
     $n2t_api_endpoint = $config->get('n2t_api_endpoint');
     $n2t_shoulder = $config->get('n2t_shoulder');
+    $n2t_local_branding_resolver = $config->get('n2t_local_branding_resolver');
 
     // First we mint the ARK.
     $minting_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/m/ark/' . $n2t_shoulder . '?mint%201';
@@ -70,7 +71,7 @@ class N2t implements MinterInterface {
     }
     catch (RequestException $e) {
       $message = "Minting response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
-      \Drupal::logger('persistent identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
+      \Drupal::logger('persistent_identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
       return NULL;
     }
 
@@ -87,17 +88,22 @@ class N2t implements MinterInterface {
       );
       $response_message = (string) $request->getBody();
       if ($request->getStatusCode() == 200 & preg_match('/^egg-status: 0\n/', $response_message)) {
-        $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+        if (strlen($n2t_local_branding_resolver) > 0 && preg_match('/^http/', $n2t_local_branding_resolver)) {
+          $ret = rtrim($n2t_local_branding_resolver, '/') . '/ark:/' . $ark;
+	}
+	else {
+	  $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+	}
         return $ret;
       }
       else {
-        \Drupal::logger('persistent identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $response->getStatusCode() . ': ' . $response_message);
+        \Drupal::logger('persistent_identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $response->getStatusCode() . ': ' . $response_message);
         return NULL;
       }
     }
     catch (RequestException $e) {
       $message = "Binding response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
-      \Drupal::logger('persistent identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
+      \Drupal::logger('persistent_identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
       return NULL;
     }
   }

@@ -63,6 +63,19 @@ function n2t_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
       ],
     ];
 
+    $form['n2t_local_branding_resolver'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Branded ARK resolver base URL',
+      '#default_value' => $config->get('n2t_local_branding_resolver'),
+      '#description' => t('The pattern to replace the N2T host with when publishing ARKs, e.g. "https://ids.mydomain.edu/". This requires set up of a "branded" resolver as described in the N2T API documentation. Leave blank if you are not using branded ARKs.'),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
     $form['#submit'][] = 'n2t_submit';
   }
 }
@@ -85,6 +98,7 @@ function n2t_submit(array &$form, FormStateInterface $form_state) {
 
   $n2t_api_endpoint = $form_state->getValue('n2t_api_endpoint', $existing_config->get('n2t_api_endpoint'));
   $n2t_shoulder = $form_state->getValue('n2t_shoulder', $existing_config->get('n2t_shoulder'));
+  $n2t_local_branding_resolver = $form_state->getValue('n2t_local_branding_resolver', $existing_config->get('n2t_local_branding_resolver'));
 
   // Save password in Drupal state.
   $state = \Drupal::state();
@@ -98,5 +112,6 @@ function n2t_submit(array &$form, FormStateInterface $form_state) {
     ->set('n2t_password', trim($n2t_password))
     ->set('n2t_api_endpoint', trim($n2t_api_endpoint))
     ->set('n2t_shoulder', trim($n2t_shoulder))
+    ->set('n2t_local_branding_resolver', trim($n2t_local_branding_resolver))
     ->save();
 }

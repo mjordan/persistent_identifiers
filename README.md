@@ -16,6 +16,7 @@ Currently, the following Minters are available:
 * [Handle](modules/hdl) (contributed by [@elizoller](https://github.com/elizoller))
 * [DataCite DOI Minter](modules/doi_datacite/README.md)
 * [EZID ARKs](modules/ezid) (contributed by [@seth-shaw-unlv](https://github.com/seth-shaw-unlv))
+* [N2T ARKs](modules/n2t)
 
 The following Persisters are available:
 
@@ -23,7 +24,7 @@ The following Persisters are available:
 
 ## Requirements
 
-Drupal 8. This module is not specific to Islandora.
+Drupal 8 or 9. This module is not specific to Islandora.
 
 For production use, you will need access to an API for minting persistent identifiers (e.g., [DataCite](https://datacite.org/), [EZID](https://ezid.cdlib.org/), etc.).
 
