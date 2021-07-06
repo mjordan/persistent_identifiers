@@ -43,8 +43,8 @@ class N2t implements MinterInterface {
    * @param mixed $extra
    *   Extra data the minter needs, for example from the node edit form.
    *
-   * @return string
-   *   The identifier.
+   * @return string|NULL
+   *   The identifier, or NULL on failure.
    */
   public function mint($entity, $extra = NULL) {
     $config = \Drupal::config('n2t.settings');
@@ -71,13 +71,13 @@ class N2t implements MinterInterface {
     catch (RequestException $e) {
       $message = "Minting response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
       \Drupal::logger('persistent identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
-      return FALSE;
+      return NULL;
     }
 
     // Then we bind it to the current node.
     $node_host = \Drupal::request()->getSchemeAndHttpHost();
     // $node_url = $node_host . $entity->toUrl()->toString();
-    $node_url = 'https://www.lib.sfu.ca/facilities/rooms-spaces/library-spaces';
+    $node_url = 'https://www.lib.sfu.ca/about/branches-depts/rc';
     $binding_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/b?ark:/' . $ark . '.set%20_t%20' . urlencode($node_url);
     $client = \Drupal::httpClient();
     try {
@@ -87,18 +87,19 @@ class N2t implements MinterInterface {
 	['auth' => [$n2t_user, $n2t_password]]
       );
       $response_message = (string) $request->getBody();
-      if ($response_message == trim('egg-status: 0')) {
-        return rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+      if (preg_match('/^egg-status: 0\n/', $response_message)) {
+        $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+        return $ret;
       }
       else {
         \Drupal::logger('persistent identifiers')->error('Could not bind ARK; ARK resolver response: ' . $response_message);
-        return FALSE;
+        return NULL;
       }
     }
     catch (RequestException $e) {
       $message = "Binding response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
       \Drupal::logger('persistent identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
-      return FALSE;
+      return NULL;
     }
   }
 

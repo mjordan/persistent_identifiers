@@ -89,7 +89,7 @@ class Dois implements MinterInterface {
       $doi = $this->doi_prefix . '/' . $suffix;
     }
     if ($this->doi_suffix_source == 'uuid') {
-      $suffix = $entity->Uuid();
+      $suffix = $entity->uuid();
       $doi = $this->doi_prefix . '/' . $suffix;
     }
 
