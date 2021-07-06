@@ -31,6 +31,9 @@ Two ways:
 
 ## Identifier metadata
 
+If you select the option to "Add basic identifier metadata", the ARK elements 'who', 'what', 'when', and 'how' are bound with the ARK. Currently, only 'what' is populated, with the node's title. The other three elements are assigned the reserved missing value" "to be assigned or announced later".
+
+If you do not select this option, no metadata is bound to the ARK.
 
 ## Current maintainer
 

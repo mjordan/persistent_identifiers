@@ -53,6 +53,7 @@ class N2t implements MinterInterface {
     $n2t_api_endpoint = $config->get('n2t_api_endpoint');
     $n2t_shoulder = $config->get('n2t_shoulder');
     $n2t_local_branding_resolver = $config->get('n2t_local_branding_resolver');
+    $n2t_identifier_metadata = $config->get('n2t_identifier_metadata');
 
     // First we mint the ARK.
     $minting_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/m/ark/' . $n2t_shoulder . '?mint%201';
@@ -75,37 +76,97 @@ class N2t implements MinterInterface {
       return NULL;
     }
 
-    // Then we bind it to the current node.
+    // Then we bind it to the current node. Optionally, we POST the basic identifier metadata.
     $node_host = \Drupal::request()->getSchemeAndHttpHost();
     $node_url = $node_host . $entity->toUrl()->toString();
-    $binding_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/b?ark:/' . $ark . '.set%20_t%20' . urlencode($node_url);
     $client = \Drupal::httpClient();
-    try {
-      $request = $client->request(
-        'GET',
-        $binding_url,
-	['auth' => [$n2t_user, $n2t_password]]
-      );
-      $response_message = (string) $request->getBody();
-      if ($request->getStatusCode() == 200 & preg_match('/^egg-status: 0\n/', $response_message)) {
-        if (strlen($n2t_local_branding_resolver) > 0 && preg_match('/^http/', $n2t_local_branding_resolver)) {
-          $ret = rtrim($n2t_local_branding_resolver, '/') . '/ark:/' . $ark;
-	}
-	else {
-	  $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
-	}
-        return $ret;
+    if ($n2t_identifier_metadata) {
+      // POST basic identifier metadata plus ARK.
+      $binding_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/b?-';
+      $identifier_metadata = $this->get_identifier_metadata($entity->label(), $ark, $node_url);
+      try {
+        $request = $client->request(
+          'POST',
+          $binding_url,
+	  [
+            'auth' => [$n2t_user, $n2t_password],
+            'headers' => ['Content-Type' => 'text/plain; charset=UTF-8'],
+            'body' => $identifier_metadata
+          ]
+	);
+        $response_message = (string) $request->getBody();
+        if ($request->getStatusCode() == 200 & preg_match('/^egg-status: 0\n/', $response_message)) {
+          if (strlen($n2t_local_branding_resolver) > 0 && preg_match('/^http/', $n2t_local_branding_resolver)) {
+            $ret = rtrim($n2t_local_branding_resolver, '/') . '/ark:/' . $ark;
+	  }
+	  else {
+	    $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+	  }
+          return $ret;
+        }
+        else {
+          \Drupal::logger('persistent_identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $request->getStatusCode() . ': ' . $response_message);
+          return NULL;
+        }
       }
-      else {
-        \Drupal::logger('persistent_identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $response->getStatusCode() . ': ' . $response_message);
+      catch (RequestException $e) {
+        $message = "Binding response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
+        \Drupal::logger('persistent_identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
         return NULL;
       }
     }
-    catch (RequestException $e) {
-      $message = "Binding response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
-      \Drupal::logger('persistent_identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
-      return NULL;
+    else {
+      // Don't POST basic identifier metadata, just bind the ARK.
+      $binding_url = rtrim($n2t_api_endpoint, '/') . '/a/' . $n2t_user . '/b?ark:/' . $ark . '.set%20_t%20' . urlencode($node_url);
+      try {
+        $request = $client->request(
+          'GET',
+          $binding_url,
+	  ['auth' => [$n2t_user, $n2t_password]]
+	);
+        $response_message = (string) $request->getBody();
+        if ($request->getStatusCode() == 200 & preg_match('/^egg-status: 0\n/', $response_message)) {
+          if (strlen($n2t_local_branding_resolver) > 0 && preg_match('/^http/', $n2t_local_branding_resolver)) {
+            $ret = rtrim($n2t_local_branding_resolver, '/') . '/ark:/' . $ark;
+	  }
+	  else {
+	    $ret = rtrim($n2t_api_endpoint, '/') . '/ark:/' . $ark;
+	  }
+          return $ret;
+        }
+        else {
+          \Drupal::logger('persistent_identifiers')->error('Could not bind ARK; ARK resolver response (HTTP response code ' . $response->getStatusCode() . ': ' . $response_message);
+          return NULL;
+        }
+      }
+      catch (RequestException $e) {
+        $message = "Binding response: " . (string) $request->getBody() . " Exception message: " . $e->getMessage();
+        \Drupal::logger('persistent_identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
+        return NULL;
+      }
     }
+  }
+
+  /**
+   * Assembles the basic identifer metadata for posting to the ARK resolver.
+   *
+   * @param string $title
+   *   The node's title.
+   * @param string $ark
+   *   The node's ARK.
+   * @param string $node_url
+   *   The node's URL (where the ARK resolves to).
+   *
+   * @return string|NULL
+   *   The identifier, or NULL on failure.
+   */
+  public function get_identifier_metadata($title, $ark, $node_url) {
+    $data = $ark . ".set _t: " . $ark . "\n";
+    $data = $data . $ark . ".set what: " . $title . "\n";
+    $data = $data . $ark . ".set when: (:tba)\n";
+    $data = $data . $ark . ".set who: (:tba)\n";
+    $data = $data . $ark . ".set how: (:tba)\n";
+    return $data;
   }
 
 }

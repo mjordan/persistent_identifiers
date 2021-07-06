@@ -76,6 +76,20 @@ function n2t_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
       ],
     ];
 
+    $form['n2t_identifier_metadata'] = [
+      '#weight' => 80,
+      '#type' => 'checkbox',
+      '#default_value' => $config->get('n2t_identifier_metadata'),
+      '#description' => t("Add the persistent identifier's 'who', 'what', 'when', 'how' metadata as documented in the N2T API docs. Currently only 'what' is populated, with the node's title. Other elements are given placeholder values."),
+      '#title' => t('Add basic identifier metadata'),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'n2t.minter.n2t'],
+        ],
+      ],
+    ];
+
+
     $form['#submit'][] = 'n2t_submit';
   }
 }
@@ -99,6 +113,7 @@ function n2t_submit(array &$form, FormStateInterface $form_state) {
   $n2t_api_endpoint = $form_state->getValue('n2t_api_endpoint', $existing_config->get('n2t_api_endpoint'));
   $n2t_shoulder = $form_state->getValue('n2t_shoulder', $existing_config->get('n2t_shoulder'));
   $n2t_local_branding_resolver = $form_state->getValue('n2t_local_branding_resolver', $existing_config->get('n2t_local_branding_resolver'));
+  $n2t_identifier_metadata = $form_state->getValue('n2t_identifier_metadata', $existing_config->get('n2t_identifier_metadata'));
 
   // Save password in Drupal state.
   $state = \Drupal::state();
@@ -113,5 +128,6 @@ function n2t_submit(array &$form, FormStateInterface $form_state) {
     ->set('n2t_api_endpoint', trim($n2t_api_endpoint))
     ->set('n2t_shoulder', trim($n2t_shoulder))
     ->set('n2t_local_branding_resolver', trim($n2t_local_branding_resolver))
+    ->set('n2t_identifier_metadata', trim($n2t_identifier_metadata))
     ->save();
 }
