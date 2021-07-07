@@ -27,11 +27,11 @@ Note that if you want to use "branded" identifier strings, you will need to conf
 Two ways:
 
 1. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit form will see a checkbox with the help text "Create ARK". Saving the node with this box checked will mint an ARK for the node and persist it to the field configured in the module's admin settings.
-1. Via Views Bulk Operations.
+1. Via Views Bulk Operations using the "Mint N2T Ark" action.
 
 ## Identifier metadata
 
-If you select the option to "Add basic identifier metadata", the ARK elements 'who', 'what', 'when', and 'how' are bound with the ARK. Currently, only 'what' is populated, with the node's title. The other three elements are assigned the reserved missing value" "to be assigned or announced later".
+If you select the option to "Add basic identifier metadata", the ARK elements 'who', 'what', 'when', and 'how' are bound with the ARK. Currently, only 'what' is populated, with the node's title. The other three elements are assigned the reserved missing value "to be assigned or announced later".
 
 If you do not select this option, no metadata is bound to the ARK.
 

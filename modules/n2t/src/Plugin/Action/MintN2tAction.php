@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
  * @Action(
  *   id = "n2t_mint_ark",
  *   label = @Translation("Mint N2T Ark"),
- *   type = "",
+ *   type = "node",
  *   confirm = TRUE,
  * )
  */
