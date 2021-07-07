@@ -31,7 +31,7 @@ Two ways:
 
 ## Identifier metadata
 
-If you select the option to "Add basic identifier metadata", the ARK elements 'who', 'what', 'when', and 'how' are bound with the ARK. Currently, only 'what' is populated, with the node's title. The other three elements are assigned the reserved missing value "to be assigned or announced later".
+If you select the option to "Add basic identifier metadata", the ARK elements 'who', 'what', 'when', and 'how' are bound with the ARK. Currently, only 'what' is populated, with the node's title. The other three elements are assigned the reserved missing value "to be assigned or announced later". This metadata can be retrieved from the ARK resolver service by simply adding a `?` to the end of the ARK URL, e.g. `https://ids-n2t2-stg.n2t.net/ark:/99999/fq31s3t?`.
 
 If you do not select this option, no metadata is bound to the ARK.
 
