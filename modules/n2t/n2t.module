@@ -80,7 +80,7 @@ function n2t_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
       '#weight' => 80,
       '#type' => 'checkbox',
       '#default_value' => $config->get('n2t_identifier_metadata'),
-      '#description' => t("Add the persistent identifier's 'who', 'what', 'when', 'how' metadata as documented in the N2T API docs. Currently only 'what' is populated, with the node's title. Other elements are given placeholder values."),
+      '#description' => t("Add the persistent identifier's required 'who', 'what', 'when', 'how' metadata to the ARK record as documented in the N2T API docs. Currently only 'what' is populated, with the node's title. Other elements are given placeholder values."),
       '#title' => t('Add basic identifier metadata'),
       '#states' => [
         'visible' => [

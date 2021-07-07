@@ -89,7 +89,6 @@ function persistent_identifiers_jsonld_alter_normalized_array(EntityInterface $e
     $pid_field_name = $config->get('persistent_identifiers_target_field');
     if ($entity->hasField($pid_field_name)) {
       $pid_field_values = $entity->get($pid_field_name)->getValue();
-      devel_debug($pid_field_values);
       if (is_array($pid_field_values) && array_key_exists('value', $pid_field_values)) {
         $pid = $pid_field_values[0]['value'];
       }

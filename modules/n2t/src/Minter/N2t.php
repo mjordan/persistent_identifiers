@@ -157,15 +157,16 @@ class N2t implements MinterInterface {
    * @param string $node_url
    *   The node's URL (where the ARK resolves to).
    *
-   * @return string|NULL
-   *   The identifier, or NULL on failure.
+   * @return string
+   *   The metadata, suitable for POSTing as the body of the request.
    */
   public function get_identifier_metadata($title, $ark, $node_url) {
-    $data = $ark . ".set _t: " . $ark . "\n";
-    $data = $data . $ark . ".set what: " . $title . "\n";
-    $data = $data . $ark . ".set when: (:tba)\n";
-    $data = $data . $ark . ".set who: (:tba)\n";
-    $data = $data . $ark . ".set how: (:tba)\n";
+    $ark = 'ark:/' . $ark;
+    $data = $ark . '.set _t ' . $node_url . "\n";
+    $data = $data . $ark . '.set what "' . addslashes($title) . '"' . "\n";
+    $data = $data . $ark . ".set when (:tba)\n";
+    $data = $data . $ark . ".set who (:tba)\n";
+    $data = $data . $ark . '.set how "(:mtype oba)"' . "\n";
     return $data;
   }
 
