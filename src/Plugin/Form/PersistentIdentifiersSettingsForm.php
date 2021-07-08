@@ -104,6 +104,13 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       ],
     ];
 
+    $form['persistent_identifiers_create_url_alias'] = [
+      '#weight' => 100,
+      '#type' => 'checkbox',
+      '#default_value' => $config->get('persistent_identifiers_create_url_alias'),
+      '#description' => $this->t("Automatically assign a URL alias to the node based on the persistent identifer. If the node already has a URL alias, this one will replace it."),
+      '#title' => $this->t('Create URL alias from identifier'),
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -119,6 +126,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       ->set('persistent_identifiers_bundles', array_values($form_state->getValue('persistent_identifiers_bundles')))
       ->set('persistent_identifiers_map_to_schema_sameas', $form_state->getValue('persistent_identifiers_map_to_schema_sameas'))
       ->set('persistent_identifiers_resolver_base_url', $form_state->getValue('persistent_identifiers_resolver_base_url'))
+      ->set('persistent_identifiers_create_url_alias', $form_state->getValue('persistent_identifiers_create_url_alias'))
       ->save();
 
     parent::submitForm($form, $form_state);

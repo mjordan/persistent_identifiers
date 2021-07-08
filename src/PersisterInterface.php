@@ -30,6 +30,9 @@ interface PersisterInterface {
    *
    * @return bool
    *   TRUE if persisted, FALSE if not.
+   *
+   * Persisters should include a call to persistent_identifiers_create_alias($entity->id(), $pid);
+   * See src/Persister/Generic.php for an example.
    */
   public function persist(&$entity, $pid, $save = TRUE);
 

@@ -48,9 +48,11 @@ class Generic implements PersisterInterface {
     $target_field = trim($this->config->get('persistent_identifiers_target_field'));
     if (method_exists($entity, 'hasField') && $entity->hasField($target_field)) {
       $entity->{$target_field}[] = $pid;
+      // All persisters should include this next line.
+      persistent_identifiers_create_alias($entity->id(), $pid); 
     }
     else {
-        \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));
+      \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));
     }
     if ($save) {
       $entity->save();
