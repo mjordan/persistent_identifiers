@@ -41,7 +41,7 @@ This module and its bundled submodules are Drupal 9 ready.
 1. Assign the "Mint persistent identifiers" permission to desired roles.
 1. Visit `/admin/config/persistent_identifiers/settings` for options. Specific configuration options will vary depending on which Minter you select. See the README file for each Minter for more information.
 
-The option exists to add the persistent identifier to the JSON-LD for a node, mapped to schema:sameAs. If this is option is checked, and the resolver base URL "https://example.com/ids" is configured, the JSON-LD will look like this if the persistent identifier is "10.80484/eb7f-x968":
+An option exists to add the persistent identifier to the JSON-LD for a node, mapped to schema:sameAs. If this is option is checked, and the resolver base URL "https://example.com/ids" is configured, the JSON-LD will look like this if the persistent identifier is "10.80484/eb7f-x968":
 
 ```
 "http:\/\/schema.org\/sameAs":[
@@ -53,6 +53,7 @@ The option exists to add the persistent identifier to the JSON-LD for a node, ma
    }
 ]
 ```
+Note: if you enable or disable this option, you need to clear Drupal's cach for your change to take effect.
 
 ## Usage
 

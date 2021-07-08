@@ -84,7 +84,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#weight' => 100,
       '#type' => 'checkbox',
       '#default_value' => $config->get('persistent_identifiers_map_to_schema_sameas'),
-      '#description' => $this->t("Add the persistent identifier to the node's JSON-LD as schema:sameAs, prepending the URL configured below. If the field is multivalued, uses the first value."),
+      '#description' => $this->t("Add the persistent identifier to the node's JSON-LD as schema:sameAs. If the field is multivalued, uses the first value. Note: if you change this value, you need to clear Drupal's cache."),
       '#title' => $this->t('Map to schema:sameAs in JSON-LD'),
       '#attributes' => [
         'id' => 'persistent_identifiers_map_to_schema_sameas',
@@ -95,7 +95,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#maxlength' => 256,
       '#title' => $this->t('Resolver base URL'),
       '#weight' => 100,
-      '#description' => $this->t('URL to prepend to the persistent identifier. Leave empty to not prepend anything.'),
+      '#description' => $this->t('URL to prepend to the persistent identifier in "http://schema.org/sameAs" triples if the identifier does not start with "http". Leave empty to not prepend anything. Note: if you change this value, you need to clear Drupal\'s cache.'),
       '#default_value' => $config->get('persistent_identifiers_resolver_base_url'),
       '#states' => [
         'visible' => [

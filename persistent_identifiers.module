@@ -82,26 +82,31 @@ function persistent_identifiers_jsonld_alter_normalized_array(EntityInterface $e
   if ($entity->getEntityTypeId() == 'node') {
     $config = \Drupal::config('persistent_identifiers.settings');
     $map_to_schema_sameas = $config->get('persistent_identifiers_map_to_schema_sameas');
-    $resolver_base_url = $config->get('persistent_identifiers_resolver_base_url');
     if (!$map_to_schema_sameas) {
       return;
     }
+
+    $resolver_base_url = $config->get('persistent_identifiers_resolver_base_url');
     $pid_field_name = $config->get('persistent_identifiers_target_field');
     if ($entity->hasField($pid_field_name)) {
       $pid_field_values = $entity->get($pid_field_name)->getValue();
-      if (is_array($pid_field_values) && array_key_exists('value', $pid_field_values)) {
+      // Take the first identifier.
+      if (is_array($pid_field_values) && array_key_exists('value', $pid_field_values[0])) {
         $pid = $pid_field_values[0]['value'];
       }
     }
 
     if (isset($pid) && isset($normalized['@graph'])) {
-      if (strlen($pid) && !is_array($normalized["@graph"])) {
-        $normalized['@graph'] = [$normalized['@graph']];
+      if (strlen($resolver_base_url) && !preg_match('/^http/', $pid)) {
+        $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
+          '@id'  => $resolver_base_url . $pid,
+	];
       }
-      $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
-	// @todo: This should replace the hostname in the PID ith the value of the form element, not prepend it.
-        '@id'  => $resolver_base_url . $pid,
-      ];
+      else {
+        $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
+          '@id'  => $pid,
+	];
+      }
     }
   }
 }
