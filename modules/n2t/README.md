@@ -20,7 +20,7 @@ You will also need credentials to mint and bind ARKs with the [Names To Things](
 
 Visit `/admin/config/persistent_identifiers/settings` for options.
 
-Note that if you want to use "branded" identifier strings, you will need to configure a web server to forward to the N2T resolver. Documentation on how to do this is provided in the [N2T API documentation](http://n2t.net/e/n2t_apidoc.html).
+Note that if you want to use "branded" identifier strings, you will need to configure a web server to forward to the N2T resolver as documented at [N2T API documentation](http://n2t.net/e/n2t_apidoc.html). If you do not use this feature, your ARKs will contain the hostname of the N2T resolver, `https://n2t.net` (or whatever you use in the "N2T API endpoint" setting).
 
 ## Usage
 
