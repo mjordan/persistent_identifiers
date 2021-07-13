@@ -92,7 +92,7 @@ function persistent_identifiers_jsonld_alter_normalized_array(EntityInterface $e
     if ($entity->hasField($pid_field_name)) {
       $pid_field_values = $entity->get($pid_field_name)->getValue();
       // Take the first identifier.
-      if (is_array($pid_field_values) && !is_null($pid_field_values[0]) && array_key_exists('value', $pid_field_values[0])) {
+      if (is_array($pid_field_values) && array_key_exists(0, $pid_field_values) && !is_null($pid_field_values[0]) && array_key_exists('value', $pid_field_values[0])) {
         $pid = $pid_field_values[0]['value'];
       }
     }
