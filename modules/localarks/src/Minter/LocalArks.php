@@ -6,7 +6,7 @@ use Drupal\persistent_identifiers\MinterInterface;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * A Handle class.
+ * A Minter class.
  *
  * Mints a persistent identifier using a configurable
  * namespace and a random string.
@@ -46,10 +46,21 @@ class LocalArks implements MinterInterface {
    */
   public function mint($entity, $extra = NULL) {
     $config = \Drupal::config('localarks.settings');
+    $localarks_redirector_host = $config->get('localarks_redirector_host');
+    $localarks_naan = $config->get('localarks_naan');
 
-    $base_url = $host = \Drupal::request()->getSchemeAndHttpHost();
-    return $base_url . '/id/' . $entity->uuid();
+    // Should provide 183,579,396 unique combinations.
+    $identifier_length = 10;
+    $chars = 'abcdefghijklmnopqrstuvwxyz';
+    $ark_identifier = '';
+    for ($i = 0; $i < $identifier_length; $i++) {
+        $index = rand(0, strlen($chars) - 1);
+        $ark_identifier .= $chars[$index];
+    }
 
+    // ARK should contain the redirector base URL, so we  prepend it here.
+    $ark = trim(rtrim($localarks_redirector_host, '/')) . '/ark:/' . trim($localarks_naan) . '/' . $ark_identifier;
+    return $ark;
   }
 
 }

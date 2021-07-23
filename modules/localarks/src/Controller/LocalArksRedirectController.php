@@ -25,29 +25,26 @@ class LocalArksRedirectController extends ControllerBase {
   public function main() {
     $naan = \Drupal::routeMatch()->getRawParameter('naan');
     $idstring = \Drupal::routeMatch()->getRawParameter('idstring');
+    // @todo: Minter will prepend the redirector base URL when it mints the ARK, so we'll need to also prepend it here for the query.
+    $ark = 'ark:/' . $naan . '/' . $idstring;
 
-    $response = new RedirectResponse('https://www.lib.sfu.ca');
-    $response->send();
-    return $response;
+    $persister_target_field = \Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_target_field');
 
-
-    $config = \Drupal::config('redirect_from_identifier.settings');
-    $fields = preg_split("/\\r\\n|\\r|\\n/", $config->get('redirect_from_identifier_target_fields'));
-
-    // An array of associative arrays, each with version ID => node ID.
-    $ids = [];
-    foreach ($fields as $field_name) {
-      $query = \Drupal::entityQuery('node');
-      $query->condition(trim($field_name), trim($identifier), '=');
-      $results = $query->execute();
-      if (count($results) == 0) {
-        continue;
-      }
-      $ids = array_merge($ids, array_values($results));
+    $node_query = \Drupal::entityQuery('node');
+    $node_query->condition(trim($persister_target_field), trim($ark), '=');
+    $results = $node_query->execute();
+    if (count($results) == 0) {
+      throw new NotFoundHttpException();
     }
-
-    return $ids;
-
+    else {
+      // For now, take the first node found (@todo: account for multiple results, maybe like Redirect From Identifier does it).
+      $first_result = array_shift($results);
+      $node_host = \Drupal::request()->getSchemeAndHttpHost();
+      $node_url = $node_host . '/node/' . $first_result;
+      $response = new RedirectResponse($node_url);
+      $response->send();
+      return $response;
+    }
   }
 
 }

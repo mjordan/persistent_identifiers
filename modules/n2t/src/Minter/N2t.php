@@ -6,7 +6,7 @@ use Drupal\persistent_identifiers\MinterInterface;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * A Handle class.
+ * A Minter class.
  *
  * Mints a persistent identifier using a configurable
  * namespace and a random string.
