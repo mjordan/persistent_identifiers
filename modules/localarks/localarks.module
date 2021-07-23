@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Contains the localarks.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if ($form_id == 'persistent_identifiers_admin_settings') {
+    $config = \Drupal::config('localarks.settings');
+
+    $form['localarks_redirector_host'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'Redirecting hostname',
+      '#default_value' => $config->get('localarks_redirector_host'),
+      '#description' => t("Full hostname, include 'https://', of the redirector hostname."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
+        ],
+      ],
+    ];
+
+    $form['localarks_naan'] = [
+      '#type' => 'textfield',
+      '#access' => TRUE,
+      '#title' => 'NAAN',
+      '#default_value' => $config->get('localarks_naan'),
+      '#description' => t("Your insitution's NAAN. You must get this from N2T."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
+        ],
+      ],
+    ];
+
+    $form['#submit'][] = 'localarks_submit';
+  }
+}
+
+/**
+ * Submit callback.
+ *
+ * Saves the value of the minter-specific field defined in the implementation
+ * of hook_form_alter() above.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function localarks_submit(array &$form, FormStateInterface $form_state) {
+  $existing_config = \Drupal::config('localarks.settings');
+  $localarks_redirector_host = $form_state->getValue('localarks_redirector_host', $existing_config->get('localarks_redirector_host'));
+  $localarks_naan = $form_state->getValue('localarks_naan', $existing_config->get('localarks_naan'));
+
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('localarks.settings')
+    ->set('localarks_redirector_host', trim($localarks_redirector_host))
+    ->set('localarks_naan', trim($localarks_naan))
+    ->save();
+}

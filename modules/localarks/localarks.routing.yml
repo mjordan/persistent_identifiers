@@ -1,0 +1,8 @@
+localarks.redirect:
+  path: '/ark:/{naan}/{idstring}'
+  defaults:
+    _controller: '\Drupal\localarks\Controller\LocalArksRedirectController::main'
+  requirements:
+    _permission: 'access content'
+    naan: \d+
+    idstring: '[a-zA-Z\d]+'

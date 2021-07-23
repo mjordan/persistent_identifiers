@@ -36,7 +36,7 @@ class N2t implements MinterInterface {
   /**
    * Mints the identifier.
    *
-   * Issues a mint request to the EZID service for an ARK.
+   * Issues a mint request to the N2T service.
    *
    * @param object $entity
    *   The entity.
