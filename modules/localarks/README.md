@@ -2,18 +2,15 @@
 
 ## Introduction
 
-Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allow you to create ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. This module automatically creates an alias from the local ARK to the node that contains the ARK in the configured identifier field. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node with that ARK. This abilty lets you publish ARKs that use the persistent hostname `https://n2t.net` instead of your local Drupal's hostname.
+Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allow you to create and publish ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARKs and redirects the user to the appropriate node. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node in your Drupal with that ARK.
 
-Using `https://n2t.net/` in your ARKs is possible because N2T automatically redirects an ARK ("ark:/9999/jdlwicl" in the example above) to the base URL of the "name mapping authority" associated with the NAAN component of the ARK ("9999" in the above examples). When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARKs and redirects the user to the appropriate node.
-
-For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's name mapping authority.
+For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's "name mapping authority." You register your Drupal's base URL when you request a Name Assigning Authority Number (NAAN) from the [Names To Things](http://n2t.net) service using [this form](https://goo.gl/forms/bmckLSPpbzpZ5dix1).
 
 ## Requirements
 
 * Drupal 8 or 9
 * [Persistent Identifiers module](https://github.com/mjordan/persistent_identifiers)
-
-You will also need a Name Assigning Authority Number (NAAN), which you can get from the [Names To Things](http://n2t.net) service using [this form](https://goo.gl/forms/bmckLSPpbzpZ5dix1).
+* A Name Assigning Authority Number (NAAN)
 
 ## Installation
 
