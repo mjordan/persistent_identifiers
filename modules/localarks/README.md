@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allow you to create and publish ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARKs and redirects the user to the appropriate node. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node in your Drupal with that ARK.
+Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allows you to create and publish ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARK and redirects the user to the appropriate node. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node in your Drupal with that ARK.
 
 For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's "name mapping authority." You register your Drupal's base URL when you request a Name Assigning Authority Number (NAAN) from the [Names To Things](http://n2t.net) service using [this form](https://goo.gl/forms/bmckLSPpbzpZ5dix1).
 
@@ -10,7 +10,7 @@ For the initial redirection from `https://n2t.net/` to work, your Drupal's base 
 
 * Drupal 8 or 9
 * [Persistent Identifiers module](https://github.com/mjordan/persistent_identifiers)
-* A Name Assigning Authority Number (NAAN)
+* A Name Assigning Authority Number (NAAN) that has your Drupal's base URL as its name mapping authority value
 
 ## Installation
 

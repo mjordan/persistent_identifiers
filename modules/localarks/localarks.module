@@ -19,7 +19,7 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
       '#access' => TRUE,
       '#title' => 'Redirecting hostname',
       '#default_value' => $config->get('localarks_redirector_host'),
-      '#description' => t("Full hostname, including 'https://' and the trailing '/', of the redirector hostname."),
+      '#description' => t("Full hostname, including 'https://' and the trailing '/', of the redirector hostname. Do not change this value unless you are running your own resolution server."),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
@@ -38,7 +38,6 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
     ];
     $form['localarks_naan'] = [
       '#type' => 'textfield',
-      '#access' => TRUE,
       '#title' => 'NAAN',
       '#default_value' => $config->get('localarks_naan'),
       '#description' => t("Your insitution's NAAN. You must get this from N2T."),
