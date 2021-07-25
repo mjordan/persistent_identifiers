@@ -19,14 +19,23 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
       '#access' => TRUE,
       '#title' => 'Redirecting hostname',
       '#default_value' => $config->get('localarks_redirector_host'),
-      '#description' => t("Full hostname, include 'https://', of the redirector hostname."),
+      '#description' => t("Full hostname, including 'https://' and the trailing '/', of the redirector hostname."),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
         ],
       ],
     ];
-
+    $form['localarks_log_redirects'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $config->get('localarks_log_redirects'),
+      '#title' => t('Log redirects from this host'),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
+        ],
+      ],
+    ];
     $form['localarks_naan'] = [
       '#type' => 'textfield',
       '#access' => TRUE,
@@ -59,10 +68,12 @@ function localarks_submit(array &$form, FormStateInterface $form_state) {
   $existing_config = \Drupal::config('localarks.settings');
   $localarks_redirector_host = $form_state->getValue('localarks_redirector_host', $existing_config->get('localarks_redirector_host'));
   $localarks_naan = $form_state->getValue('localarks_naan', $existing_config->get('localarks_naan'));
+  $localarks_log_redirects = $form_state->getValue('localarks_log_redirects', $existing_config->get('localarks_log_redirects'));
 
   $config_factory = \Drupal::configFactory();
   $config_factory->getEditable('localarks.settings')
     ->set('localarks_redirector_host', trim($localarks_redirector_host))
     ->set('localarks_naan', trim($localarks_naan))
+    ->set('localarks_log_redirects', $localarks_log_redirects)
     ->save();
 }

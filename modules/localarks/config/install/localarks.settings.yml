@@ -1,2 +1,3 @@
 localarks_redirector_host: 'https://n2t.net/' 
 localarks_naan:
+localarks_log_redirects: 1

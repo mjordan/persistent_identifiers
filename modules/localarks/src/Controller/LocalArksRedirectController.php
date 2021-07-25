@@ -25,8 +25,10 @@ class LocalArksRedirectController extends ControllerBase {
   public function main() {
     $naan = \Drupal::routeMatch()->getRawParameter('naan');
     $idstring = \Drupal::routeMatch()->getRawParameter('idstring');
-    // @todo: Minter will prepend the redirector base URL when it mints the ARK, so we'll need to also prepend it here for the query.
-    $ark = 'ark:/' . $naan . '/' . $idstring;
+    // Minter prepends the redirector base URL when it mints the ARK, so we need to also prepend it here for the query.
+    $config = \Drupal::config('localarks.settings');
+    $localarks_redirector_host = $config->get('localarks_redirector_host');
+    $ark = rtrim($localarks_redirector_host, '/') . '/ark:/' . $naan . '/' . $idstring;
 
     $persister_target_field = \Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_target_field');
 
@@ -43,6 +45,9 @@ class LocalArksRedirectController extends ControllerBase {
       $node_url = $node_host . '/node/' . $first_result;
       $response = new RedirectResponse($node_url);
       $response->send();
+      if ($config->get('localarks_log_redirects')) {
+        \Drupal::logger('persistent_identifiers')->info(t("ARK @ark redirected to @node_url.", ['@ark' => $ark, '@node_url' => $node_url]));
+      }
       return $response;
     }
   }
