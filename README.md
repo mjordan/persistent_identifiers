@@ -17,6 +17,7 @@ Currently, the following Minters are available:
 * [DataCite DOI Minter](modules/doi_datacite/README.md)
 * [EZID ARKs](modules/ezid) (contributed by [@seth-shaw-unlv](https://github.com/seth-shaw-unlv))
 * [N2T ARKs](modules/n2t)
+* [Local ARKs](modules/localarks)
 
 The following Persisters are available:
 

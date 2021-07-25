@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Drupal module that mints ARKs locally and redirects them from the Names To Things service back to the local Drupal. This allow you to create ARKs that look like "https://n2t.net/ark:/9999/jdlwicl" that automatically resolve to "https://yourdrupalhost.com/ark:/9999/jdlwicl". This module automatically creates an alias from the local ARK to the node that contains the ARK in the configured identifier field. In other words, a user visiting "https://n2t.net/ark:/9999/jdlwicl" will redirect the user to the node with that ARK. This abilty lets you publish ARKs that use the persistent hostname "https://n2t.net" instead of your local Drupal's hostname.
+Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allow you to create ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. This module automatically creates an alias from the local ARK to the node that contains the ARK in the configured identifier field. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node with that ARK. This abilty lets you publish ARKs that use the persistent hostname `https://n2t.net` instead of your local Drupal's hostname.
 
-Using "https://n2t.net/" in your ARKs is possible because N2T automatically redirects an ARK ("ark:/9999/jdlwicl" in the example above) to the base URL of the "name mapping authority" associated with the NAAN component of the ARK ("9999" in the above examples). When your Drupal instance is the target for this redirection from "https://n2t.et/", this module parses the ARKs and redirects the user to the appropriate node.
+Using `https://n2t.net/` in your ARKs is possible because N2T automatically redirects an ARK ("ark:/9999/jdlwicl" in the example above) to the base URL of the "name mapping authority" associated with the NAAN component of the ARK ("9999" in the above examples). When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARKs and redirects the user to the appropriate node.
 
-For the initial redirection from "https://n2t.net/" to work, your Drupal's base URL must be registered as your NAAN's name mapping authority.
+For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's name mapping authority.
 
 ## Requirements
 
