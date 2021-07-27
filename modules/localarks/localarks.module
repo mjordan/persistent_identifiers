@@ -47,6 +47,17 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
         ],
       ],
     ];
+    $form['localarks_shoulders'] = [
+      '#type' => 'textarea',
+      '#title' => 'Shoulders',
+      '#default_value' => $config->get('localarks_shoulders'),
+      '#description' => t("Strings prepended to ARK's identifiers, used to specify the department/unit within your organization. Entries should be in `/shoulder,baseurl` form, one per line. Leave empty to use no shoulders. See the README for more info."),
+      '#states' => [
+        'visible' => [
+          ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
+        ],
+      ],
+    ];
 
     $form['#submit'][] = 'localarks_submit';
   }
@@ -68,11 +79,13 @@ function localarks_submit(array &$form, FormStateInterface $form_state) {
   $localarks_redirector_host = $form_state->getValue('localarks_redirector_host', $existing_config->get('localarks_redirector_host'));
   $localarks_naan = $form_state->getValue('localarks_naan', $existing_config->get('localarks_naan'));
   $localarks_log_redirects = $form_state->getValue('localarks_log_redirects', $existing_config->get('localarks_log_redirects'));
+  $localarks_shoulders = $form_state->getValue('localarks_shoulders', $existing_config->get('localarks_shoulders'));
 
   $config_factory = \Drupal::configFactory();
   $config_factory->getEditable('localarks.settings')
     ->set('localarks_redirector_host', trim($localarks_redirector_host))
     ->set('localarks_naan', trim($localarks_naan))
     ->set('localarks_log_redirects', $localarks_log_redirects)
+    ->set('localarks_shoulders', $localarks_shoulders)
     ->save();
 }
