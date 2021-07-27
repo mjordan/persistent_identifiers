@@ -57,6 +57,10 @@ class LocalArks implements MinterInterface {
         $index = rand(0, strlen($chars) - 1);
         $ark_identifier .= $chars[$index];
     }
+    $local_shoulder = $config->get('localarks_local_shoulder');
+    if (strlen($local_shoulder)) {
+      $ark_identifier = ltrim($local_shoulder, '/') . $ark_identifier;
+    }
 
     // ARK should contain the redirector base URL, so we  prepend it here.
     $ark = trim(rtrim($localarks_redirector_host, '/')) . '/ark:/' . trim($localarks_naan) . '/' . $ark_identifier;

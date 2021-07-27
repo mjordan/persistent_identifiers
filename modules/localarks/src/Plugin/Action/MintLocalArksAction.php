@@ -1,27 +1,27 @@
 <?php
 
-namespace Drupal\n2t\Plugin\Action;
+namespace Drupal\localarks\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Mints ARKs via N2T.
+ * Mints ARKs locally.
  *
  * @Action(
- *   id = "n2t_mint_ark",
- *   label = @Translation("Mint N2T ARK"),
+ *   id = "localarks_mint_ark",
+ *   label = @Translation("Mint ARKs locally"),
  *   type = "node",
  *   confirm = TRUE,
  * )
  */
-class MintN2tAction extends ActionBase {
+class MintLocalArksAction extends ActionBase {
 
   /**
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $minter = \Drupal::service('n2t.minter.n2t');
+    $minter = \Drupal::service('localarks.minter.localarks');
     $persister_id = \Drupal::config('persistent_identifiers.settings')->get('persistent_identifiers_persister');
     $persister = \Drupal::service($persister_id);
     // The values saved in this action's configuration form are in $this->configuration.

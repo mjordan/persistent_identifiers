@@ -1,3 +1,5 @@
 localarks_redirector_host: 'https://n2t.net/' 
-localarks_naan:
+localarks_naan: ''
 localarks_log_redirects: 1
+localarks_local_shoulder: ''
+localarks_shoulders: ''
