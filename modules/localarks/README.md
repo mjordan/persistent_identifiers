@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allows you to create and publish ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARK and redirects the user to the appropriate node. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node in your Drupal with that ARK.
+Drupal module that mints ARKs locally and redirects them from the Names To Things service at https://n2t.net back to the local Drupal. This allows you to create and publish ARKs for nodes like `https://n2t.net/ark:/9999/jdlwicl` that automatically resolve to `https://yourdrupalhost.com/ark:/9999/jdlwicl`. When your Drupal instance is the target for this redirection from `https://n2t.net/`, this module parses the ARK and redirects the user to the appropriate node. In other words, a user visiting `https://n2t.net/ark:/9999/jdlwicl` will be redirected to the node in your Drupal with that ARK. Using this approach, ARKs are not minted by or persisted at `https://n2t.net`, they are minted by and persisted in the local Drupal. `https://n2t.net` is simply a redirection service.
 
-For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's "name mapping authority." You register your Drupal's base URL when you request a Name Assigning Authority Number (NAAN) from the [Names To Things](http://n2t.net) service using [this form](https://goo.gl/forms/bmckLSPpbzpZ5dix1).
+For the initial redirection from `https://n2t.net/` to work, your Drupal's base URL must be registered as your NAAN's "name mapping authority." This registration is how N2T knows where to redirect ARK requests to. You register your Drupal's base URL when you request a Name Assigning Authority Number (NAAN) from the [Names To Things](http://n2t.net) service using [this form](https://goo.gl/forms/bmckLSPpbzpZ5dix1).
 
 ## Requirements
 
 * Drupal 8 or 9
 * [Persistent Identifiers module](https://github.com/mjordan/persistent_identifiers)
-* A Name Assigning Authority Number (NAAN) that has your Drupal's base URL as its name mapping authority value
+* A Name Assigning Authority Number (NAAN) that has your Drupal's base URL as its name mapping authority value, requested using the form linked above.
 
 ## Installation
 
@@ -27,7 +27,7 @@ Do not change the "Redirecting hostname" value unless you are running your own r
 
 ### Shoulders
 
-This module has an option to register "shoulders". NAANs are associated with only one target base URL (say for example `https://ids.exampleuni.ca`). "Shoulders" are a way of identifying subunits within the organization represented by the NAAN in the form of short strings prepended to an ARK's ID string (the part that follows the NAAN and is specific to the resource the ARK redirects to). For example, a university may have the NAAN "9999", resulting in ARK URLs that look like `https://n2t.net/ark:/9999/khgtsso`. An example of this ARK with the shoulder `/lib` (which identifies the Library in this fictitious university) added to the ID string would be `https://n2t.net/ark:/9999/libkhgtsso` (`/lib` is the shoulder prepended to the ID string `/khgtsso`).
+This module has an option to register "shoulders". NAANs are associated with only one target base URL (say for example `https://ids.exampleuni.ca`). "Shoulders" are a way of identifying subunits within the organization represented by the NAAN in the form of short strings prepended to an ARK's ID string (the part that follows the NAAN and is specific to the resource the ARK redirects to). For example, a university may have the NAAN "9999", resulting in ARK URLs that look like `https://n2t.net/ark:/9999/khgtsso`. An example of this ARK with the shoulder `/s3` (which identifies the Library in this fictitious university) added to the ID string would be `https://n2t.net/ark:/9999/s3khgtsso` (`/s3` is the shoulder prepended to the ID string `/khgtsso`).
 
 #### External shoulders
 
@@ -37,7 +37,7 @@ Shoulder mappings to the local Drupal are ignored, to avoid infinite redirection
 
 #### Local shoulders
 
-This field contains the shoulder string that your local Drupal must use when it mints ARK identifiers. You do not need to register this shoulder with N2T or anyone else. Use of a shoulder is recommended since it will future-proof your NAAN in the event that other units within your organization will create or manage ARKs in the future. 
+This field contains the shoulder string that your local Drupal must use when it mints ARK identifiers. You do not need to register this shoulder with N2T or anyone else. Use of a shoulder is recommended since it will future-proof your NAAN in the event that other units within your organization will create or manage ARKs in the future. Conventionally, a shoulder should be short and end in a digit, e.g., b1, b2, b3, etc.
 
 ## Usage
 

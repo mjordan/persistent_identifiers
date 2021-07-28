@@ -50,7 +50,7 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
     $form['localarks_local_shoulder'] = [
       '#type' => 'textfield',
       '#title' => 'Local shoulder',
-      '#placeholder' => t('/lib'),
+      '#placeholder' => t('/s2'),
       '#default_value' => $config->get('localarks_local_shoulder'),
       '#description' => t("String to prepend to ARKs minted by this module. Leading '/' is optional. Leave empty to use no shoulder. See the README for more info."),
       '#states' => [
@@ -63,7 +63,7 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
       '#type' => 'textarea',
       '#title' => 'External shoulders',
       '#default_value' => $config->get('localarks_shoulders'),
-      '#placeholder' => t("/lib,https://example.com/library\n/ar,https://example.com/archives"),
+      '#placeholder' => t("/s3,https://example.com/library\n/s6,https://example.com/archives"),
       '#description' => t("Strings prepended to ARK id strings, used to specify the department/unit within your organization. Entries should be in comma-separated `/shoulder,baseurl` form, one per line. Leave empty to use no shoulders. See the README for more info."),
       '#states' => [
         'visible' => [

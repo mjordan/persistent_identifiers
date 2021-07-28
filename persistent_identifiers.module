@@ -65,7 +65,7 @@ function persistent_identifiers_mint_from_form(array &$form, FormStateInterface 
       return;
     }
     $persister = \Drupal::service($config->get('persistent_identifiers_persister'));
-    if ($persister->persist($entity, $pid)) {
+    if ($persister->persist($entity, $pid, TRUE)) {
       \Drupal::logger('persistent_identifiers')->info(t("Persistent identifier %pid created for node @nid.", ['%pid' => $pid, '@nid' => $entity->id()]));
       \Drupal::messenger()->addStatus(t("Persistent identifier %pid created for this node.", ['%pid' => $pid]));
     }
