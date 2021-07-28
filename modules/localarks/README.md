@@ -27,19 +27,19 @@ Do not change the "Redirecting hostname" value unless you are running your own r
 
 ### Shoulders
 
-This module has an option to register "shoulders". NAANs are associated with only one target base URL (say for example `https://ids.exampleuni.ca`). "Shoulders" are a way of identifying subunits within the organization represented by the NAAN in the form of short strings prepended to an ARK's ID string (the part that follows the NAAN and is specific to the resource the ARK redirects to). For example, a university may have the NAAN "9999", resulting in ARK URLs that look like `https://n2t.net/ark:/9999/khgtsso`. An example of this ARK with the shoulder `/s2` (which identifies the Library in this fictitious university) added to the ID string would be `https://n2t.net/ark:/9999/s2khgtsso` (`s2` is the shoulder prepended to the ID string `khgtsso`).
+This module has an option to register "shoulders". NAANs are associated with only one target base URL (say for example `https://ids.exampleuni.ca`). Shoulders are a way of identifying subunits within the organization represented by the NAAN in the form of short strings prepended to an ARK's ID string (the part that follows the NAAN and is specific to the resource the ARK redirects to). For example, a university may have the NAAN "9999", resulting in ARK URLs that look like `https://n2t.net/ark:/9999/khgtsso`. An example of this ARK with the shoulder `s2` (which identifies the Library in this fictitious university) added to the ID string would be `https://n2t.net/ark:/9999/s2khgtsso` (`s2` is the shoulder prepended to the ID string `khgtsso`).
 
 #### External shoulders
 
 Even though the primary purpose of shoulders is to provide namespaces internal to an organization to ensure that two departments within the organization-level NAAN do not mint conflicting ID strings, this module provides an additional service that leverages shoulders: it makes it possible to configure shoulder-to-base URL mappings such that ARKs being accepted by the module automatically redirect the ARK to the base URL associated with the shoulder. However, that's all it does - a service that understands how to parse and resolve ARKs needs to be available at the destination URL. That service could be another Drupal running this module, or some other ARK-aware script or application.
 
-An important implication of this redirection to other hosts within your orginization is that ARKs containing your NAAN plus shoulders do not identify resources in the local Drupal, they identify resources managed within those other hosts. The series of redirects for these ARKs is 1) from `https://n2t.net`, 2) to the Drupal with this module installed, and finally 3) to the ARK service running on the host associated with a shoulder.
+An important implication of this redirection to other hosts within your orginization is that ARKs containing shoulders with associated external hosts do not identify resources in the local Drupal, they identify resources managed within those other hosts. The sequence of redirects for these ARKs is 1) from `https://n2t.net`, 2) to the Drupal with this module installed, and finally 3) to the ARK service running on the host associated with a shoulder.
 
 If no shoulder mappings are configured, all incoming ARKs are assumed to have the local Drupal as their redirection target. If you configure a mapping to the local Drupal's base URL, that mapping will be ignored to avoid infinite redirection.
 
 #### Local shoulders
 
-This field contains the shoulder string that your local Drupal will use use when it mints ARK identifiers. Configuration of a shoulder is optional but recommended since it will future-proof your NAAN in the event that other units within your organization ever create or manage ARKs in the future. Conventionally, a shoulder should be short and end in a digit, e.g., b1, b2, b3, etc. You do not need to register this shoulder with N2T or anyone else.
+This field contains the shoulder string that your local Drupal will use use when it mints ARK identifiers. Configuration of a shoulder is optional but recommended since it will future-proof your NAAN in the event that other units within your organization ever create or manage ARKs in the future. Conventionally, a shoulder should be short and end in a digit, e.g., b1, b2, b3, etc. You do not need to register this shoulder with N2T or anyone else. If you configure a local shoulder, you do not need to have a correponding entry in the "External shoulders" configuration.
 
 ## Usage
 
