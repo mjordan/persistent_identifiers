@@ -40,7 +40,7 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
       '#type' => 'textfield',
       '#title' => 'NAAN',
       '#default_value' => $config->get('localarks_naan'),
-      '#description' => t("Your insitution's NAAN. You must get this from N2T."),
+      '#description' => t("Your insitution's NAAN (Name Assigning Authority Number). You must get this from N2T."),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
@@ -50,8 +50,9 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
     $form['localarks_local_shoulder'] = [
       '#type' => 'textfield',
       '#title' => 'Local shoulder',
+      '#placeholder' => t('/lib'),
       '#default_value' => $config->get('localarks_local_shoulder'),
-      '#description' => t("Shoulder to prepend to ARKs minted by this module. Leading '/' is optional. Leave empty to use no shoulder."),
+      '#description' => t("String to prepend to ARKs minted by this module. Leading '/' is optional. Leave empty to use no shoulder. See the README for more info."),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'localarks.minter.localarks'],
@@ -62,6 +63,7 @@ function localarks_form_alter(&$form, FormStateInterface &$form_state, $form_id)
       '#type' => 'textarea',
       '#title' => 'External shoulders',
       '#default_value' => $config->get('localarks_shoulders'),
+      '#placeholder' => t("/lib,https://example.com/library\n/ar,https://example.com/archives"),
       '#description' => t("Strings prepended to ARK id strings, used to specify the department/unit within your organization. Entries should be in comma-separated `/shoulder,baseurl` form, one per line. Leave empty to use no shoulders. See the README for more info."),
       '#states' => [
         'visible' => [

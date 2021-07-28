@@ -20,7 +20,7 @@ class LocalArks implements MinterInterface {
    *   Appears in the Persistent Identifiers config form.
    */
   public function getName() {
-    return t('Local Ark Minter');
+    return t('Local ARK Minter');
   }
 
   /**

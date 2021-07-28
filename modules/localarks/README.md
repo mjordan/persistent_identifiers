@@ -29,14 +29,20 @@ Do not change the "Redirecting hostname" value unless you are running your own r
 
 This module has an option to register "shoulders". NAANs are associated with only one target base URL (say for example `https://ids.exampleuni.ca`). "Shoulders" are a way of identifying subunits within the organization represented by the NAAN in the form of short strings prepended to an ARK's ID string (the part that follows the NAAN and is specific to the resource the ARK redirects to). For example, a university may have the NAAN "9999", resulting in ARK URLs that look like `https://n2t.net/ark:/9999/khgtsso`. An example of this ARK with the shoulder `/lib` (which identifies the Library in this fictitious university) added to the ID string would be `https://n2t.net/ark:/9999/libkhgtsso` (`/lib` is the shoulder prepended to the ID string `/khgtsso`).
 
-The primary purpose of shoulders is to provide namespaces internal to an organization to ensure that two departments within the organization-level NAAN do not mint conflicting ID strings. This Drupal module provides an additional service that leverages shoulders: it makes it possible to configure shoulder-to-base URL mappings such that ARKs being accepted by the module automatically redirect the ARK to the base URL associated with the shoulder. That's it however - a service that understands how to parse and resolve ARKs needs to be available at the destination URL. That service could be another Drupal running this module, or some other ARK-aware script or application. An important implication of this redirection to other hosts within your orginization is that ARKs containing your NAAN plus shoulders do not identify resources in the local Drupal, they identify resources hosted within those other hosts.
+#### External shoulders
+
+The primary purpose of shoulders is to provide namespaces internal to an organization to ensure that two departments within the organization-level NAAN do not mint conflicting ID strings. This Drupal module provides an additional service that leverages shoulders: it makes it possible to configure shoulder-to-base URL mappings such that ARKs being accepted by the module automatically redirect the ARK to the base URL associated with the shoulder. That's all it does however - a service that understands how to parse and resolve ARKs needs to be available at the destination URL. That service could be another Drupal running this module, or some other ARK-aware script or application. An important implication of this redirection to other hosts within your orginization is that ARKs containing your NAAN plus shoulders do not identify resources in the local Drupal, they identify resources managed within those other hosts.
 
 Shoulder mappings to the local Drupal are ignored, to avoid infinite redirection. If no shoulder mappings are configured, all incoming ARKs are assumed to have the local Drupal as their redirection target.
+
+#### Local shoulders
+
+This field contains the shoulder string that your local Drupal must use when it mints ARK identifiers. You do not need to register this shoulder with N2T or anyone else. Use of a shoulder is recommended since it will future-proof your NAAN in the event that other units within your organization will create or manage ARKs in the future. 
 
 ## Usage
 
 1. Users with the "Mint persistent identifiers" permission will see an option at the bottom of the entity edit form will see a checkbox with the help text "Create ARK". Saving the node with this box checked will mint an ARK for the node and persist it to the field configured in the module's admin settings.
-1. Via Views Bulk Operations using the "Mint Ark locally" action.
+1. Via Views Bulk Operations using the "Mint ARKs locally" action.
 
 ## Identifier metadata and other ARK services
 
