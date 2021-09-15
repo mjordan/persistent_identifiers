@@ -47,6 +47,7 @@ class Generic implements PersisterInterface {
   public function persist(&$entity, $pid, $save = TRUE) {
     $target_field = trim($this->config->get('persistent_identifiers_target_field'));
     if (method_exists($entity, 'hasField') && $entity->hasField($target_field)) {
+      // TODO: Don't add same values
       $entity->{$target_field}[] = $pid;
     }
     else {

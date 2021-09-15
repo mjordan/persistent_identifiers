@@ -5,3 +5,11 @@ persistent_identifiers.settings:
     _title: 'Persistent Identifiers'
   requirements:
     _permission: 'administer site configuration'
+persistent_identifiers.persist_all:
+  path: '/admin/config/persistent_identifiers/persist_all'
+  defaults:
+    _controller: '\Drupal\persistent_identifiers\Controller\PersistentIdentifiersController::persistent_identifiers_mint_and_persist'
+    _title: 'Persist objects'
+  requirements:
+    _permission: 'administer content'
+
