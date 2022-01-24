@@ -95,6 +95,8 @@ class Hdl implements MinterInterface {
     } catch (ClientException $e) {
       \Drupal::logger('persistent identifiers')->error(print_r($e, TRUE));
       return FALSE;
+    } catch (GuzzleHttp\Exception\ConnectionException $e) {
+      \Drupal::logger('persistent identifiers')->erorr(print_r($e, TRUE));
     }
     $full_handle = "https://hdl.handle.net/" . $handle;
     return $full_handle;
