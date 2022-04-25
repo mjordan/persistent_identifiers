@@ -84,7 +84,7 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
       '#weight' => 100,
       '#type' => 'checkbox',
       '#default_value' => $config->get('persistent_identifiers_map_to_schema_sameas'),
-      '#description' => $this->t("Add the persistent identifier to the node's JSON-LD as schema:sameAs, prepending the URL configured below. If the field is multivalued, uses the first value."),
+      '#description' => $this->t("Add the persistent identifier to the node's JSON-LD as schema:sameAs, prepending the URL configured below."),
       '#title' => $this->t('Map to schema:sameAs in JSON-LD'),
       '#attributes' => [
         'id' => 'persistent_identifiers_map_to_schema_sameas',
