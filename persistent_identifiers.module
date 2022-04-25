@@ -89,18 +89,21 @@ function persistent_identifiers_jsonld_alter_normalized_array(EntityInterface $e
     $doi_field_name = $config->get('persistent_identifiers_target_field');
     if ($entity->hasField($doi_field_name)) {
       $doi_field_values = $entity->get($doi_field_name)->getValue();
-      if (array_key_exists('value', $doi_field_values[0])) {
-        $doi = $doi_field_values[0]['value'];
-      }
+      $identifiers = array_filter(array_map(
+        fn($value): string => (isset($value['value'])) ? $value['value'] : "",
+        $doi_field_values
+      ));
     }
 
     if (isset($normalized['@graph'])) {
-      if (strlen($doi) && !is_array($normalized["@graph"])) {
-        $normalized['@graph'] = [$normalized['@graph']];
+      foreach ($identifiers as $id) {
+        if (strlen($id) && !is_array($normalized["@graph"])) {
+          $normalized['@graph'] = [$normalized['@graph']];
+        }
+        $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
+          '@id'  => $resolver_base_url . $id,
+        ];
       }
-      $normalized['@graph'][0]['http://schema.org/sameAs'][] = [
-        '@id'  => $resolver_base_url . $doi,
-      ];
     }
   }
 }
