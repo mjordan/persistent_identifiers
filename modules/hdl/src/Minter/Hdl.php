@@ -50,7 +50,13 @@ class Hdl implements MinterInterface {
   public function mint($entity, $extra = NULL) {
     $config = \Drupal::config('hdl.settings');
     $handle_prefix = $config->get('hdl_prefix');
-    $handle_type_qualifier = $config->get('hdl_qualifier');
+
+    if ($extra && array_key_exists('hdl_qualifier', $extra)) {
+      $handle_type_qualifier = $extra['hdl_qualifier'];
+    }
+    else {
+      $handle_type_qualifier = $config->get('hdl_qualifier');
+    }
     $handle = $handle_prefix . '/' . $handle_type_qualifier . '.' . $entity->id();
     $host = \Drupal::request()->getSchemeAndHttpHost();
     $url = $host . $entity->toUrl()->toString();
@@ -89,8 +95,10 @@ class Hdl implements MinterInterface {
     } catch (ClientException $e) {
       \Drupal::logger('persistent identifiers')->error(print_r($e, TRUE));
       return FALSE;
+    } catch (GuzzleHttp\Exception\ConnectionException $e) {
+      \Drupal::logger('persistent identifiers')->erorr(print_r($e, TRUE));
     }
-    $full_handle = "https://handle.net/" . $handle;
+    $full_handle = "https://hdl.handle.net/" . $handle;
     return $full_handle;
   }
 
