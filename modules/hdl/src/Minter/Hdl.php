@@ -51,7 +51,7 @@ class Hdl implements MinterInterface {
     $config = \Drupal::config('hdl.settings');
     $handle_prefix = $config->get('hdl_prefix');
 
-    if ($extra && array_key_exists('hdl_qualifier', $extra)) {
+    if ($extra && property_exists($extra, 'hdl_qualifier')) {
       $handle_type_qualifier = $extra['hdl_qualifier'];
     }
     else {
