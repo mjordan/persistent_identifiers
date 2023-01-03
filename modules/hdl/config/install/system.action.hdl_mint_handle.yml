@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: hdl_mint_handle
+label: 'Create Handle'
+type: node
+plugin: hdl_mint_handle
+configuration: {  }
