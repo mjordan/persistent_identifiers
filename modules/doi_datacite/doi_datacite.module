@@ -16,6 +16,11 @@ use Drupal\Core\Url;
 function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   // Inject fields required by this minter into the Persistent Identifier admin form.
   if ($form_id == 'persistent_identifiers_admin_settings') {
+    $form['doi_begin_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<label><b>DOI</b></label><hr>',
+    );
+
     $pid_config = \Drupal::config('persistent_identifiers.settings');
     $config = \Drupal::config('doi_datacite.settings');
 
@@ -71,7 +76,7 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
       ],
     ];
     $form['doi_datacite_password'] = [
-      '#type' => 'textfield',
+      '#type' => 'password',
       '#title' => 'DataCite API password',
       '#default_value' => $config->get('doi_datacite_password'),
       '#description' => t("Your DataCite API password."),
@@ -137,6 +142,10 @@ function doi_datacite_form_alter(&$form, FormStateInterface &$form_state, $form_
       }
     }
 
+    $form['doi_end_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<br><br>',
+    );
     $form['#submit'][] = 'doi_datacite_admin_settings_submit';
   }
 }
@@ -175,7 +184,7 @@ function doi_datacite_form_node_form_alter(&$form, FormStateInterface $form_stat
        ];
       $form['doi_datacite_required_fields']['required_note'] = [
         '#markup' => t('Note: All of these fields are required by DataCite to mint a DOI. They do not duplicate existing metadata.'),
-      ];     
+      ];
       $form['doi_datacite_required_fields']['doi_datacite_resource_type'] = [
         '#type' => 'radios',
         '#options' => $resource_type_values,

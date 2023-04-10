@@ -12,6 +12,10 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function ezid_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   if ($form_id == 'persistent_identifiers_admin_settings') {
+    $form['ezid_begin_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<label><b>ARK</b></label><hr>',
+    );
     $config = \Drupal::config('ezid.settings');
     $form['ezid_user'] = [
       '#type' => 'textfield',
@@ -62,6 +66,10 @@ function ezid_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
       ],
     ];
 
+    $form['ezid_end_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<br><br>',
+    );
     // @TODO Add mapping options for metadata per bundle.
     $form['#submit'][] = 'ezid_submit';
   }

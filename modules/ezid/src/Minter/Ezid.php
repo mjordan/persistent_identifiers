@@ -52,17 +52,21 @@ class Ezid implements MinterInterface {
 
     $config = \Drupal::config('ezid.settings');
     $ezid_user = $config->get('ezid_user');
+    if (empty($password))
+      $password = $config->get('ezid_password');
     $ezid_api_endpoint = $config->get('ezid_api_endpoint');
     $ezid_shoulder = $config->get('ezid_shoulder');
 
     $host = \Drupal::request()->getSchemeAndHttpHost();
-    $target = $host . $entity->toUrl()->toString();
+    //$target = $host . $entity->toUrl()->toString();
 
     // @TODO Add support for Dublin Core and additional fields based on bundle.
     $data = "_profile: erc\n";
     $data = $data . "what: " . $entity->label() . "\n";
-    $data = $data . "_target: $target\n";
-
+    if ($entity->id() > 0) {
+      $target = $host . $entity->toUrl()->toString();
+      $data = $data . "_target: $target\n";
+    }
     $client = \Drupal::httpClient();
     try {
       $request = $client->request(

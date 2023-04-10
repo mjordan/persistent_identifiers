@@ -21,6 +21,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function sample_minter_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   if ($form_id == 'persistent_identifiers_admin_settings') {
+    $form['sample_begin_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<label><b>Sample</b></label><hr>',
+    );
+
     $config = \Drupal::config('sample_minter.settings');
     $form['sample_minter_namespace'] = [
       '#type' => 'textfield',
@@ -34,7 +39,10 @@ function sample_minter_form_alter(&$form, FormStateInterface &$form_state, $form
         ],
       ],
     ];
-
+    $form['sample_end_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<br><br>',
+    );
     $form['#submit'][] = 'sample_minter_submit';
   }
 }
