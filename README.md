@@ -4,7 +4,7 @@
 
 I am no longer maintaining this module. If you are interested in taking it over, please open an issue and I will gladly transfer it to you.
 
-I will not be responding to other issues (other than offers to take over maintainership) or pull requests.
+I will not be responding to new issues (other than offers to take over maintainership) or pull requests.
 
 Thanks to everyone who has contributed to this module. I appreciate your collaboration.
 
