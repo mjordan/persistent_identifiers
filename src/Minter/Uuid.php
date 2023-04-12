@@ -44,10 +44,14 @@ class Uuid implements MinterInterface {
    *   The identifier.
    */
   public function mint($entity, $extra = NULL) {
-    $base_url = $host = \Drupal::request()->getSchemeAndHttpHost();
-    // Note: The URL resulting from this minter does not resolve
-    // to the entity. It is for demonstration purposes only.
-    return $base_url . '/id/' . $entity->uuid();
+    if (empty($extra) || !str_starts_with($extra, "http")) {
+      $base_url = $host = \Drupal::request()->getSchemeAndHttpHost();
+      // Note: The URL resulting from this minter does not resolve
+      // to the entity. It is for demonstration purposes only.
+      return $base_url . '/id/' . $entity->uuid();
+	}
+	else
+	  return $extra;
   }
 
 }

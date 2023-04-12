@@ -21,20 +21,26 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
   if ($form_id == 'persistent_identifiers_admin_settings') {
+    $form['hdl_begin_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<label><b>Handle</b></label><hr>',
+    );
     $config = \Drupal::config('hdl.settings');
+
     $form['hdl_prefix'] = [
       '#type' => 'textfield',
       '#access' => TRUE,
       '#title' => 'Handle identifier prefix',
       '#default_value' => $config->get('hdl_prefix'),
-      '#description' => t("This string will be prefix used for the handle. Ie. https://handle.net/2286.9 where 2286.9 is the prefix."),
+      '#description' => t("This string will be prefix used for the handle. An example handle looks like this: 0.NA/20.500.12345"),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
         ],
       ],
+      '#required' => TRUE,
     ];
-
+    /*
     $form['hdl_qualifier'] = [
       '#type' => 'textfield',
       '#access' => TRUE,
@@ -47,18 +53,20 @@ function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
         ],
       ],
     ];
+    */
 
     $form['hdl_admin_handle'] = [
       '#type' => 'textfield',
       '#access' => TRUE,
       '#title' => 'Admin Handle',
       '#default_value' => $config->get('hdl_admin_handle'),
-      '#description' => t("The Admin Handle used for permissions in the handle JSON"),
+      '#description' => t("The Admin Handle under your prefix"),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
         ],
       ],
+      '#required' => TRUE,
     ];
 
     $form['hdl_admin_index'] = [
@@ -66,14 +74,15 @@ function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
       '#access' => TRUE,
       '#title' => 'Admin Index',
       '#default_value' => $config->get('hdl_admin_index'),
-      '#description' => t("The Admin index used for permissions in the handle JSON"),
+      '#description' => t("The index for your Admin Handle"),
       '#states' => [
         'visible' => [
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
         ],
       ],
+      '#required' => TRUE,
     ];
-
+    /*
     $form['hdl_handle_permissions'] = [
       '#type' => 'textfield',
       '#access' => TRUE,
@@ -86,6 +95,7 @@ function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
         ],
       ],
     ];
+    */
 
     $form['hdl_handle_api_endpoint'] = [
       '#type' => 'textfield',
@@ -98,8 +108,17 @@ function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
           ':input[id="persistent_identifiers_minter"]' => ['value' => 'hdl.minter.hdl'],
         ],
       ],
+      '#required' => TRUE,
     ];
 
+    $form['hdl_admin_private_key'] = [
+      '#type' => 'textarea',
+      '#title' => 'Private Key',
+      '#default_value' => $config->get('hdl_admin_private_key'),
+      '#required' => TRUE,
+    ];
+
+    /*
     $form['hdl_handle_basic_auth_password'] = [
       '#type' => 'password',
       // '#access' => TRUE,
@@ -112,7 +131,11 @@ function hdl_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
         ],
       ],
     ];
-
+    */
+    $form['hdl_end_label'] = array(
+      '#type' => 'markup',
+      '#markup' => '<br><br>',
+    );
     $form['#submit'][] = 'hdl_submit';
   }
 }
@@ -132,19 +155,21 @@ function hdl_submit(array &$form, FormStateInterface $form_state) {
   $existing_config = \Drupal::config('hdl.settings');
   $admin_handle = $form_state->getValue('hdl_admin_handle', $existing_config->get('hdl_admin_handle'));
   $prefix = $form_state->getValue('hdl_prefix', $existing_config->get('hdl_prefix'));
-  $qualifier = $form_state->getValue('hdl_qualifier', $existing_config->get('hdl_qualifier'));
+  //$qualifier = $form_state->getValue('hdl_qualifier', $existing_config->get('hdl_qualifier'));
   $api_endpoint = $form_state->getValue('hdl_handle_api_endpoint', $existing_config->get('hdl_handle_api_endpoint'));
   $index = $form_state->getValue('hdl_admin_index', $existing_config->get('hdl_admin_index'));
   $permissions = $form_state->getValue('hdl_handle_permissions', $existing_config->get('hdl_handle_permissions'));
-  $password = $form_state->getValue('hdl_handle_basic_auth_password', $existing_config->get('hdl_handle_basic_auth_password'));
+  //$password = $form_state->getValue('hdl_handle_basic_auth_password', $existing_config->get('hdl_handle_basic_auth_password'));
+  $private_key = $form_state->getValue('hdl_admin_private_key', $existing_config->get('hdl_admin_private_key'));
   $config_factory = \Drupal::configFactory();
   $config_factory->getEditable('hdl.settings')
     ->set('hdl_admin_handle', trim($admin_handle))
     ->set('hdl_prefix', trim($prefix))
-    ->set('hdl_qualifier', trim($qualifier))
+    //->set('hdl_qualifier', trim($qualifier))
     ->set('hdl_handle_api_endpoint', trim($api_endpoint))
     ->set('hdl_admin_index', trim($index))
     ->set('hdl_handle_permissions', trim($permissions))
-    ->set('hdl_handle_basic_auth_password', trim($password))
+    //->set('hdl_handle_basic_auth_password', trim($password))
+    ->set('hdl_admin_private_key', trim($private_key))
     ->save();
 }
