@@ -47,7 +47,10 @@ class Generic implements PersisterInterface {
   public function persist(&$entity, $pid, $save = TRUE) {
     $target_field = trim($this->config->get('persistent_identifiers_target_field'));
     if (method_exists($entity, 'hasField') && $entity->hasField($target_field)) {
-      $entity->{$target_field}[] = $pid;
+			$existing_values = $entity->get($target_field)->getValue();
+			if(!in_array($pid, $existing_values)) {
+				$entity->{$target_field}[] = $pid;
+			}
     }
     else {
         \Drupal::messenger()->addMessage(t('This node does not have the required field (@field)', ['@field' => $target_field]));

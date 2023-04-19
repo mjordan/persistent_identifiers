@@ -4,6 +4,7 @@ namespace Drupal\persistent_identifiers\Plugin\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Admin settings form.
@@ -102,6 +103,19 @@ class PersistentIdentifiersSettingsForm extends ConfigFormBase {
           ':input[id="persistent_identifiers_map_to_schema_sameas"]' => ['checked' => TRUE],
         ],
       ],
+    ];
+    $form['actions']['mint_and_persist'] = [
+      '#type' => 'link',
+      '#title' => 'Mint and Persist',
+      '#attributes' => [
+        'id' => 'mint-and-persist',
+        'class' => [
+          'button'
+        ],
+        'data-twig-id' => 'goto-step-one',
+      ],
+      '#weight' => 0,
+      '#url' => Url::fromRoute('persistent_identifiers.persist_all'),
     ];
 
 
