@@ -419,7 +419,7 @@ class Dois implements MinterInterface {
           '@code' => $http_code,
           '@message' => $response->getBody()->getContents(),
           '@hint' => $hint,
-          -'@datacitejson' => $datacite_json
+          '@datacitejson' => $datacite_json
         ]));
     }
 
