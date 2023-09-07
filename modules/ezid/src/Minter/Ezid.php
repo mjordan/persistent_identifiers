@@ -2,7 +2,6 @@
 
 namespace Drupal\ezid\Minter;
 
-use Psr7\Message;
 use Drupal\persistent_identifiers\MinterInterface;
 use GuzzleHttp\Exception\RequestException;
 
@@ -77,7 +76,6 @@ class Ezid implements MinterInterface {
           'headers' => ['Content-Type' => 'text/plain; charset=UTF-8'],
           'body' => $data,
         ]);
-      \Drupal::logger('persistent identifiers')->info(print_r($request, TRUE));
       $message = $request->getBody();
       if (strpos($message, "success: ") === 0) {
         return substr($message, 9);
@@ -86,9 +84,9 @@ class Ezid implements MinterInterface {
       return FALSE;
     }
     catch (RequestException $e) {
-      $message = Message::toString($e->getRequest());
+      $message = $e->getRequest()->getUri();
       if ($e->hasResponse()) {
-        $message = $message . "\n" . Message::toString($e->getResponse());
+        $message .= "\n" . $e->getResponse()->getBody();
       }
       \Drupal::logger('persistent identifiers')->error(preg_replace('/Authorization: Basic \w+/', 'Authentication Redacted', $message));
       return FALSE;
