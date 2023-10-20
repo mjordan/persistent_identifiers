@@ -1,13 +1,6 @@
 # Persistent Identifiers
 
-## Looking for a new maintainer
-
-I am no longer maintaining this module. If you are interested in taking it over, please open an issue and I will gladly transfer it to you.
-
-I will not be responding to new issues (other than offers to take over maintainership) or pull requests. If you are looking for a module to help you manage persistent IDs in Drupal, take a look at [DiscoveryGarden's module](https://github.com/discoverygarden/dgi_actions).
-
-Thanks to everyone who has contributed to this module. I appreciate your collaboration.
-
+## Note: This module has moved to https://www.drupal.org/project/persistent_identifiers. Also, an alternative to this module is [DiscoveryGarden's module](https://github.com/discoverygarden/dgi_actions).
 
 ## Introduction
 
