@@ -1,6 +1,6 @@
 # Persistent Identifiers
 
-## Note: This module has moved to https://www.drupal.org/project/persistent_identifiers. Also, an alternative to this module is [DiscoveryGarden's module](https://github.com/discoverygarden/dgi_actions).
+Note: This module has moved to https://www.drupal.org/project/persistent_identifiers. Also, an alternative to this module is [DiscoveryGarden's module](https://github.com/discoverygarden/dgi_actions).
 
 ## Introduction
 
